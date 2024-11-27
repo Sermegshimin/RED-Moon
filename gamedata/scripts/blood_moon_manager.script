@@ -1,0 +1,525 @@
+--Don't forget to define this function if you want to use It!
+function pr(...)
+    printf(...)
+end
+
+-- class instance
+BloodMoonManager = nil
+function get_blood_moon_manager()
+	BloodMoonManager = BloodMoonManager or CBloodMoonManager()
+	return BloodMoonManager
+end
+---------------------------------------------------------------------
+
+local surge_time_factor = 10
+
+local prev_sec 				= -1
+local prev_game_sec 		= -1
+local diff_sec 				= -1
+local diff_game_sec			= -1
+
+local available_smart_terrains = {} -- list of availabe smarts for spawning
+local blood_moon_safe_radius = 60 -- add to MCM
+local blood_moon_active_spawns = {}
+local smart_terrain_exemptions = {}
+local max_zombie_spawn_count = 12  -- add to MCM
+local max_zombie_squad_size = 9
+local number_of_spawning_smarts = 3  -- add to MCM
+
+
+class "CBloodMoonManager"
+function CBloodMoonManager:__init() --Is called upon the creation of the class instance (immediately)
+	spawned_mutant_ids = {} --It's better to initialize these tables with the class instance
+	nearest_smarts_to_spawn = {} --Currently not used() because It crashed
+end
+
+function CBloodMoonManager:initialize() --Initializes some important variables
+	if not (self._state_loaded) then 
+		self.game_time_factor=level.get_time_factor()
+		self.last_blood_moon_time = game.get_game_time()
+		self.inited_time = game.get_game_time()
+		self.started = false
+		self.finished = true
+	end 
+	
+	if not (self._delta) then 
+		local freq = ui_options.get("alife/event/blood_moon_frequency")
+		self._delta = math.random(math.floor(freq/2)*3600, freq*3600)
+	end
+	
+	self.blood_moon_duration = 254 -- (duration: about 40mins of game time)
+	
+	self.time_forwarded = false
+end
+
+function CBloodMoonManager:start(manual) --Starts the event (this function is called by the command in the debug launcher)
+	if not (self._state_loaded) then 
+		self:initialize()
+	end
+	self.game_time_factor=level.get_time_factor()
+
+	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
+	Y, M, D, h, m, s, ms = self.last_blood_moon_time:get(Y, M, D, h, m, s, ms)
+	if(manual or not self.inited_time) then
+		self.inited_time = game.get_game_time()
+	else
+		self.inited_time:set(Y, M, D, h, m, s + self._delta, ms)
+	end
+
+	diff_sec = math.ceil(game.get_game_time():diffSec(self.inited_time)/level.get_time_factor())
+	
+	--local flags = {allow = true}
+	--SendScriptCallback("on_before_blood_moon",flags)
+		
+	if(diff_sec+6>self.blood_moon_duration) then
+		self:skip_blood_moon()
+	else
+		self.started = true
+		self.finished = false
+		self.stages = empty_table(self.stages)
+		level.set_time_factor(surge_time_factor)
+
+		determine_available_smarts() -- Populate available_smart_terrains table
+
+		
+		--SendScriptCallback("actor_on_interaction", "anomalies", nil, "blood_moon_start")
+	end
+end
+
+function CBloodMoonManager:new_blood_moon_time() --Defines when the next blood moon is gonna happen
+	self.last_blood_moon_time 	= game.get_game_time()
+	
+	local freq = ui_options.get("alife/event/blood_moon_frequency")
+	self._delta = math.random(math.floor(freq/2)*3600, freq*3600) 
+end
+
+function CBloodMoonManager:skip_blood_moon()
+	if not (self.inited_time) then 
+		self.inited_time = game.get_game_time()
+	end
+	if not (self.last_blood_moon_time) then 
+		self.last_blood_moon_time = game.get_game_time()
+	end
+	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
+	Y, M, D, h, m, s, ms = self.inited_time:get(Y, M, D, h, m, s, ms)
+	self.last_blood_moon_time:set(Y, M, D, h, m, s + self.blood_moon_duration, ms)
+
+	self:new_blood_moon_time(false)
+
+	self.started 			= false
+	self.finished 			= true
+
+	prev_sec				= 0
+	
+	level.set_time_factor(self.game_time_factor)
+end
+
+function CBloodMoonManager:finalize()
+end
+
+function CBloodMoonManager:finish(manual) --Ends the event and is called by the stop blood moon command in the debug menu
+	self.started 			= false
+	self.finished 			= true
+	self.last_blood_moon_time 	= game.get_game_time()
+
+	self:new_blood_moon_time(false)
+
+	if(manual or (self.time_forwarded and level_weathers.get_weather_manager().weather_fx)) then
+		level.stop_weather_fx()
+		level_weathers.get_weather_manager():forced_weather_change()
+	end
+	for k,snd in pairs(surge_manager.SurgeManager.blowout_sounds) do
+		if snd ~= nil and snd:playing() then
+			snd:stop()
+		end
+	end
+	prev_sec = 0
+	
+	self.stages = empty_table(self.stages)
+
+	level.set_time_factor(self.game_time_factor)
+end
+
+
+----------------------------------
+--	Update
+----------------------------------
+function CBloodMoonManager:update() --this function is called a lot of times consecutively by the main_loop() in surge_manager.script
+    if not (self._state_loaded) then 
+        self:initialize()
+        return
+    end
+
+    if not (self.first_update) then 
+        self.first_update = true
+        local level_name = level.name()
+        
+        local flags = {allow = true}
+        --SendScriptCallback("on_before_blood_moon", flags) --Can be used, but someway causes a STACK TRACEBACK (doesn't crash the game, can be seen in the logs)
+        
+        local diff_sec = math.ceil(game.get_game_time():diffSec(self.inited_time) / level.get_time_factor())
+        if (diff_sec + 6 > self.blood_moon_duration) then
+            self:skip_blood_moon()
+            return
+        end
+    end
+    
+    SetEvent("blood_moon", "state", self.started)
+    
+    if not (self.started) then
+        local g_time = game.get_game_time()
+        if(self.time_forwarded) then
+            local diff = math.abs(self._delta - g_time:diffSec(self.last_blood_moon_time))
+            if(diff < 3600) then
+                self._delta = 3 * 3600 + g_time:diffSec(self.last_blood_moon_time)
+            end
+            self.time_forwarded = false
+        end
+        if(g_time:diffSec(self.last_blood_moon_time) < self._delta) then
+            return
+        end
+        self:start()
+        return
+    elseif (surge_manager.is_started()) then 
+        self:skip_blood_moon()
+    end
+
+    diff_sec = math.ceil(game.get_game_time():diffSec(self.inited_time) / level.get_time_factor())
+    if (diff_sec >= self.blood_moon_duration) then 
+        self:finish()
+        return 
+    end 
+    
+    if (prev_sec ~= diff_sec) then
+        prev_sec = diff_sec
+
+        SetEvent("blood_moon", "time", diff_sec)
+        
+        if (not ui_options.get("alife/event/blood_moon_state")) then
+            self:finish()
+            return
+        end
+
+        -- Blood Moon begins -------------------------------------------------------------------------
+	pr("!Blood moon starting")
+        if (diff_sec >= 0) and (self.stages['beginning'] == nil) then
+            level.set_weather_fx("fx_blood_night")
+            self.stages['beginning'] = true
+        end
+	if (diff_sec >= 5) and (self.stages['first_wave'] == nil) then
+		self.stages['first_wave'] = true
+
+		blood_moon_active_spawns = {}
+		spawn_zombies_on_nearest_smarts()
+
+	end
+
+	if (diff_sec % 30 == 0) then 
+			
+		spawn_zombies_on_nearest_smarts()
+
+	end
+    end
+end
+
+----------------------------------
+--	Data management
+----------------------------------
+function save_state(m_data)
+	--utils_data.debug_write("BloodMoonManager:save_state BEFORE")
+	m_data.BloodMoonManager = {}
+	m_data.blood_moon_active_spawns = blood_moon_active_spawns
+	
+	local mgr = get_blood_moon_manager()
+	if not (mgr._state_loaded) then
+		mgr:initialize()
+		mgr._state_loaded = true
+	end
+	
+	m_data.BloodMoonManager.finished = mgr.finished == nil and true or mgr.finished
+	m_data.BloodMoonManager.started = mgr.started == nil and false or mgr.started
+	m_data.BloodMoonManager.last_blood_moon_time = mgr.last_blood_moon_time and utils_data.CTime_to_table(mgr.last_blood_moon_time) or game.get_game_time()
+	if (mgr.started) then 
+		m_data.BloodMoonManager.inited_time = mgr.inited_time and utils_data.CTime_to_table(mgr.inited_time) or game.get_game_time()
+		m_data.BloodMoonManager.game_time_factor = mgr.game_time_factor
+	end
+	m_data.BloodMoonManager._delta = mgr._delta
+	--utils_data.debug_write("BloodMoonManager:save_state AFTER")
+end 
+
+function load_state(m_data)
+	if not (m_data.BloodMoonManager) then 
+		return
+	end
+	blood_moon_active_spawns = m_data.blood_moon_active_spawns
+	--utils_data.debug_write("BloodMoonManager:load_state BEFORE")
+	local mgr = get_blood_moon_manager()
+	mgr:initialize()
+	mgr.finished = m_data.BloodMoonManager.finished
+	mgr.started = m_data.BloodMoonManager.started
+	mgr.last_blood_moon_time = m_data.BloodMoonManager.last_blood_moon_time and utils_data.CTime_from_table(m_data.BloodMoonManager.last_blood_moon_time) or game.get_game_time()
+	if (mgr.started == true and mgr.finished == false) then 
+		mgr.inited_time = m_data.BloodMoonManager.inited_time and utils_data.CTime_from_table(m_data.BloodMoonManager.inited_time) or game.get_game_time()
+		mgr.game_time_factor = m_data.BloodMoonManager.game_time_factor or level.get_time_factor()
+		mgr.stages = empty_table(mgr.stages)
+	else 
+		mgr.started = false 
+		mgr.finished = true
+	end
+	mgr._delta = m_data.BloodMoonManager._delta
+	mgr._state_loaded = true
+	m_data.BloodMoonManager = nil
+	--utils_data.debug_write("BloodMoonManager:save_state AFTER")
+end 
+
+function actor_on_save(binder,packet)
+	if (USE_MARSHAL) then 
+		return 
+	end
+	-- load defaults if not loaded
+	local mgr = get_blood_moon_manager()
+	if not (mgr._state_loaded) then
+		mgr:initialize()
+		mgr._state_loaded = true
+	end
+	set_save_marker(packet, "save", false, "BloodMoon")
+	packet:w_bool(mgr.finished)
+	packet:w_bool(mgr.started)
+	utils_data.w_CTime(packet, mgr.last_blood_moon_time)
+	if(mgr.started) then
+		utils_data.w_CTime(packet, mgr.inited_time)
+		packet:w_u32(mgr.game_time_factor)
+	end
+	packet:w_u32(mgr._delta)
+	set_save_marker(packet, "save", true, "BloodMoon")
+end 
+
+function actor_on_load(binder,packet)
+	local mgr = get_blood_moon_manager()
+	if not (mgr._state_loaded) then
+		mgr:initialize()
+		mgr._state_loaded = true
+	end
+	if (USE_MARSHAL) then 
+		return 
+	end 
+	set_save_marker(packet, "load", false, "BloodMoon")
+	mgr.finished = packet:r_bool()
+	mgr.started = packet:r_bool()
+	mgr.last_blood_moon_time = utils_data.r_CTime(packet)
+	if(mgr.started) then
+		mgr.inited_time = utils_data.r_CTime(packet)
+		mgr.game_time_factor = packet:r_u32()
+		mgr.stages = empty_table(mgr.stages)
+		mgr.stages = empty_table(mgr.stages)
+	end
+	mgr._delta = packet:r_u32()
+	set_save_marker(packet, "load", true, "BloodMoon")
+end 
+
+
+----------------------------------
+--	Utilities
+----------------------------------
+function start_blood_moon(p)
+	if get_blood_moon_manager() then get_blood_moon_manager():start(true) end
+end
+
+function stop_blood_moon(p)
+	if get_blood_moon_manager() then get_blood_moon_manager():finish(true) end
+end
+
+function is_started()
+	return get_blood_moon_manager().started
+end
+
+function is_finished()
+	return get_blood_moon_manager() == nil and true or get_blood_moon_manager().finished == true
+end
+
+function is_loaded()
+	return BloodMoonManager and BloodMoonManager._state_loaded == true
+end
+
+function distance_3d(p1, p2)
+	--return math.sqrt( (b.x-a.x)^2 + (b.z-a.z)^2 )
+	return p1:distance_to(p2)
+end
+
+
+-- Utilities for Blood Moon Spawning mutants: %s attempt
+
+function determine_available_smarts()
+	load_smart_terrain_exemptions()
+    available_smart_terrains = {}
+    for i = 1, 65534 do
+        local smart = alife_object(i)
+        if smart and (smart:clsid() == clsid.smart_terrain) then
+            local smart_name = smart:name() or smart:section_name() or "<empty>"
+            local smart_level_name = get_se_obj_level_name(smart)
+            
+            local smart_is_exempt = false
+            for index, exempt_smart in pairs(smart_terrain_exemptions) do
+                if exempt_smart == tostring(smart_name) then
+                    smart_is_exempt = true
+                    break
+                end 
+            end
+
+            local smart_is_on_current_level = false
+            if tostring(smart_level_name) == tostring(level.name()) then
+                smart_is_on_current_level = true
+            end
+
+            if (smart_is_exempt == false) and smart_is_on_current_level then
+                available_smart_terrains[smart_level_name] = available_smart_terrains[smart_level_name] or {}
+                table.insert(available_smart_terrains[smart_level_name], smart.id)
+            end
+        end
+    end
+	return available_smart_terrains
+end
+
+function load_smart_terrain_exemptions()
+    local ini_config = ini_file("plugins\\blood_moon_configs.ltx")
+    
+    smart_terrain_exemptions = {}
+
+    local line_count = ini_config:line_count("smart_terrain_exemptions")
+    for i = 0, line_count - 1 do
+        local result, id, value = ini_config:r_line_ex("smart_terrain_exemptions", i, "", "")
+        if id then
+            table.insert(smart_terrain_exemptions, id)
+        end
+    end
+end
+
+function get_se_obj_level_name(se_obj)
+    local vertex = game_graph():vertex(se_obj.m_game_vertex_id)
+    if not vertex then
+        return "<unknown>"
+    end
+
+    local target_level_id = vertex:level_id()
+    local target_level_name = alife():level_name(target_level_id)
+    return target_level_name
+end
+
+
+function calculate_smart_distances()
+	local distances = {}
+	local actor_pos = db.actor:position()
+	
+	for _, smart_id in ipairs(available_smart_terrains[level.name()]) do
+		local smart = alife_object(smart_id)
+		if smart then
+		local smart_pos = smart.position
+		local distance = actor_pos:distance_to(smart_pos)
+		distances[smart_id] = distance
+		end
+	end
+	
+	return distances
+	end
+	
+	
+
+function get_sorted_smart_ids()
+	local distances = calculate_smart_distances()
+	local sorted_smart_ids = {}
+
+
+	for smart_id, distance in pairs(distances) do
+		if distance > blood_moon_safe_radius then 
+		table.insert(sorted_smart_ids, {smart_id = smart_id, distance = distance})
+		end
+	end
+		
+
+	table.sort(sorted_smart_ids, function(a, b) return a.distance < b.distance end)
+
+
+
+	local result = {}
+	for i,entry in ipairs(sorted_smart_ids) do
+		result[i] = entry.smart_id
+	end
+
+	return result
+end
+
+function spawn_zombies_on_nearest_smarts()
+	local nearest_smarts = get_sorted_smart_ids()
+  
+	local smarts_to_use = {}
+	for i = 1, math.min(number_of_spawning_smarts, #nearest_smarts) do
+	  table.insert(smarts_to_use, nearest_smarts[i])
+	end
+
+	for _, smart_id in ipairs(smarts_to_use) do
+		if #blood_moon_active_spawns < max_zombie_spawn_count then
+			local smart = alife_object(smart_id)
+			if smart then
+				local squad = SIMBOARD:create_squad(smart, "blood_moon_zombies")
+				if squad then
+					table.insert(blood_moon_active_spawns, {
+						mutant_id = squad.id,
+					})
+					add_squad_members(squad, max_zombie_squad_size)
+					if squad then
+						squad.scripted_target = "actor"
+						squad.rush_to_target = true
+						pr("Hayzed squad spawned on smart [%s], targeting actor.", smart_id)  
+					end
+				end
+			end
+		end
+	end
+  end
+
+function server_entity_on_unregister(obj)
+	if blood_moon_active_spawns then
+		for idx, spawn in ipairs(blood_moon_active_spawns) do
+			if obj.id == spawn.mutant_id then
+				pr("Blood Moon: Removing squad_id: %s from table", spawn.mutant_id)
+				table.remove(blood_moon_active_spawns, idx)
+			end
+		end
+	end
+end	
+
+function add_squad_members(squad, max_squad_count)
+    local max_squad_count = math.random(1, max_squad_count)
+
+    while squad:npc_count() < max_squad_count do
+
+        local commander = alife_object(squad:commander_id())
+        local pos = commander.position
+        local lvid = commander.m_level_vertex_id
+        local gvid = commander.m_game_vertex_id
+
+        local squad_smart = squad.smart_id and SIMBOARD.smarts[squad.smart_id].smrt
+        if not squad_smart then return end
+
+        local random_spawn = ini_sys:r_string_ex(squad:section_name(), "npc_random")
+        if not random_spawn then return end
+
+        random_spawn = parse_names(random_spawn)
+        local random_sec = random_spawn[math.random(1, #random_spawn)]
+
+        local new_member_id = squad:add_squad_member(random_sec, pos, lvid, gvid)
+        local se_obj = new_member_id and alife_object(new_member_id)
+        if se_obj then
+            squad_smart:register_npc(se_obj)
+            SIMBOARD:setup_squad_and_group(se_obj)
+        end
+
+        -- Update the squad
+        squad:update()
+    end
+end
+
+
+function on_game_start()
+	RegisterScriptCallback("server_entity_on_unregister", server_entity_on_unregister)
+end

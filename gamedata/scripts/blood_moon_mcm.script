@@ -1,0 +1,24 @@
+local defaults = {
+    ["blood_moon_sate"] = 1,
+    ["blood_moon_frenquency"] = 12,
+
+}
+
+-- Define the get_config function
+function get_config(key)
+    if ui_mcm then
+        return ui_mcm.get("blood_moon/"..key)
+    else
+        return defaults[key]
+    end
+end
+
+op = { id= "blood_moon",sh=true ,gr={
+		{ id= "slide_blood_moon"			,type= "slide"	  ,link= "blood_moon_banner"	 ,text= "ui_mcm_title_blood_moon"		,size= {512,50}		,spacing= 20 },
+		{ id= "blood_moon_state"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "blood_moon_frequency"    	,type= "list"     ,val= 2	,def= 24	             ,content= {{2,"every_2h"}, {12,"every_12h"} , {24,"every_24h"} , {48,"every_2d"} , {96,"every_4d"}}  },
+      }
+    }
+function on_mcm_load()
+	return op
+end
