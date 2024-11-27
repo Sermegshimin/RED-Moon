@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_menu_blood_moon">
+		<text>Blood moon</text>
+	</string>
+	<string id="ui_mcm_menu_blood_moon_title">
+		<text>Blood moon</text>
+	</string>
+
+	<string id="ui_mcm_blood_moon_blood_moon_state">
+		<text>Enable Blood moon</text>
+	</string>
+
+	<string id="ui_mcm_blood_moon_blood_moon_frequency">
+		<text>Blood moon frequency</text>
+	</string>
+	<string id="ui_mcm_blood_moon_every_6_12_hours">
+		<text>Every 6-12 hours</text>
+	</string>
+
+	<string id="ui_mcm_blood_moon_every_12_24_hours">
+		<text>Every 12-24 hours</text>
+	</string>
+	<string id="ui_mcm_blood_moon_every_1_2_days">
+		<text>Every 1-2days</text>
+	</string>
+
+	<string id="ui_mcm_blood_moon_every_2_4_days">
+		<text>Every 2-4 days</text>
+	</string>
+
+</string_table>
