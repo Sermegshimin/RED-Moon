@@ -34,5 +34,21 @@
 	<string id="ui_mcm_blood_moon_every_2_4_days">
 		<text>Every 2-4 days</text>
 	</string>
+	
+	<string id="ui_mcm_blood_moon_safe_radius">
+		<text>Safe radius</text>
+	</string>
+	
+	<string id="ui_mcm_blood_moon_max_zombie_spawn_count">
+		<text>Maximum zombie spawn count</text>
+	</string>
+	
+	<string id="ui_mcm_blood_moon_zombie_squad_size">
+		<text>Zombie squad size</text>
+	</string>
+	
+	<string id="ui_mcm_blood_moon_number_of_spawning_smarts">
+		<text>Number of spawning smarts</text>
+	</string>
 
 </string_table>
