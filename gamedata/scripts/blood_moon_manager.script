@@ -18,14 +18,16 @@ local prev_game_sec 		= -1
 local diff_sec 				= -1
 local diff_game_sec			= -1
 
-local available_smart_terrains = {} -- list of availabe smarts for spawning
-local blood_moon_safe_radius = 60 -- add to MCM
-local blood_moon_active_spawns = {}
-local smart_terrain_exemptions = {}
-local max_zombie_spawn_count = 12  -- add to MCM
-local max_zombie_squad_size = 9
-local number_of_spawning_smarts = 3  -- add to MCM
+-- VARIABLES USED FOR SPAWNING FUNCTIONS. MOST CAN BE ADDED TO MCM. MOVE THEM WHERE NEEDED
 
+local available_smart_terrains = {} -- list of availabe smarts for spawning
+local blood_moon_safe_radius = 60 -- add to MCM 30 - 60 value would be good
+local blood_moon_max_spawn_radius = 150 -- add to MCM 150 - 200 value would be good. Squads beyond this distance will be despawned to give way to spawning on nearer smarts.
+local blood_moon_active_spawns = {} -- table containing the squad IDs of all spawned zombies.
+local smart_terrain_exemptions = {}
+local max_zombie_spawn_count = 12  -- add to MCM - used to adjust max active zombie spawns. When a squad is eliminated, script spawns another squad.
+local max_zombie_squad_size = 6 -- add to MCM - I've set ltx squad size to 3 so this will increase squad sizes randomly to this number. Gives squads some variety in squad number
+local number_of_spawning_smarts = 4  -- add to MCM - used to adjust number of nearest smarts that will spawn mutants.
 
 class "CBloodMoonManager"
 function CBloodMoonManager:__init() --Is called upon the creation of the class instance (immediately)
@@ -206,17 +208,17 @@ function CBloodMoonManager:update() --this function is called a lot of times con
             level.set_weather_fx("fx_blood_night")
             self.stages['beginning'] = true
         end
-	if (diff_sec >= 5) and (self.stages['first_wave'] == nil) then
+	if (diff_sec >= 64) and (self.stages['first_wave'] == nil) then
 		self.stages['first_wave'] = true
 
-		blood_moon_active_spawns = {}
-		spawn_zombies_on_nearest_smarts()
+		blood_moon_active_spawns = {} -- initialize active spawns table
+		spawn_zombies_on_nearest_smarts() -- spawn zombies
 
 	end
 
 	if (diff_sec % 30 == 0) then 
 			
-		spawn_zombies_on_nearest_smarts()
+		spawn_zombies_on_nearest_smarts() -- spawn zombies
 
 	end
     end
@@ -405,6 +407,48 @@ function get_se_obj_level_name(se_obj)
     return target_level_name
 end
 
+function is_squad_beyond_distance(squad_id, distance)
+	local squad = alife_object(squad_id)
+	if squad then
+	  local commander_id = squad:commander_id()
+	  local commander = alife_object(commander_id)
+	  if commander and commander.position then
+		local actor_pos = db.actor:position()
+		local commander_pos = commander.position
+		return actor_pos:distance_to(commander_pos) > distance
+	  else
+		pr("Warning: Commander not found or position unavailable for squad: %s", squad_id)
+		return false 
+	  end
+	else
+	  return false 
+	end
+  end
+
+function release_distant_squads(distance)
+	local squads_to_remove = {} 
+  
+	for i, spawn in ipairs(blood_moon_active_spawns) do
+	  if is_squad_beyond_distance(spawn.mutant_id, distance) then
+		table.insert(squads_to_remove, i)
+	  end
+	end
+  
+	for i = #squads_to_remove, 1, -1 do 
+	  local index = squads_to_remove[i]
+	  local squad_id = blood_moon_active_spawns[index].mutant_id
+	  local squad = alife_object(squad_id)
+  
+	  if squad then
+		safe_release_manager.release(squad)
+		table.remove(blood_moon_active_spawns, index)
+		pr("Blood Moon: Released distant squad: %s", squad_id)
+	  else
+		pr("Warning: Squad %s not found for release.", squad_id)
+	  end
+	end
+end
+  
 
 function calculate_smart_distances()
 	local distances = {}
@@ -420,25 +464,19 @@ function calculate_smart_distances()
 	end
 	
 	return distances
-	end
-	
-	
+end
 
 function get_sorted_smart_ids()
 	local distances = calculate_smart_distances()
 	local sorted_smart_ids = {}
 
-
 	for smart_id, distance in pairs(distances) do
-		if distance > blood_moon_safe_radius then 
-		table.insert(sorted_smart_ids, {smart_id = smart_id, distance = distance})
+		if (distance > blood_moon_safe_radius) and (distance < blood_moon_max_spawn_radius) then 
+			table.insert(sorted_smart_ids, {smart_id = smart_id, distance = distance})
 		end
 	end
 		
-
 	table.sort(sorted_smart_ids, function(a, b) return a.distance < b.distance end)
-
-
 
 	local result = {}
 	for i,entry in ipairs(sorted_smart_ids) do
@@ -475,7 +513,7 @@ function spawn_zombies_on_nearest_smarts()
 			end
 		end
 	end
-  end
+end
 
 function server_entity_on_unregister(obj)
 	if blood_moon_active_spawns then
@@ -486,37 +524,37 @@ function server_entity_on_unregister(obj)
 			end
 		end
 	end
-end	
+end
 
 function add_squad_members(squad, max_squad_count)
     local max_squad_count = math.random(1, max_squad_count)
+	local commander = alife_object(squad:commander_id())
+	if commander then
+		while squad:npc_count() < max_squad_count do
+			local pos = commander.position
+			local lvid = commander.m_level_vertex_id
+			local gvid = commander.m_game_vertex_id
 
-    while squad:npc_count() < max_squad_count do
+			local squad_smart = squad.smart_id and SIMBOARD.smarts[squad.smart_id].smrt
+			if not squad_smart then return end
 
-        local commander = alife_object(squad:commander_id())
-        local pos = commander.position
-        local lvid = commander.m_level_vertex_id
-        local gvid = commander.m_game_vertex_id
+			local random_spawn = ini_sys:r_string_ex(squad:section_name(), "npc_random")
+			if not random_spawn then return end
 
-        local squad_smart = squad.smart_id and SIMBOARD.smarts[squad.smart_id].smrt
-        if not squad_smart then return end
+			random_spawn = parse_names(random_spawn)
+			local random_sec = random_spawn[math.random(1, #random_spawn)]
 
-        local random_spawn = ini_sys:r_string_ex(squad:section_name(), "npc_random")
-        if not random_spawn then return end
+			local new_member_id = squad:add_squad_member(random_sec, pos, lvid, gvid)
+			local se_obj = new_member_id and alife_object(new_member_id)
+			if se_obj then
+				squad_smart:register_npc(se_obj)
+				SIMBOARD:setup_squad_and_group(se_obj)
+			end
 
-        random_spawn = parse_names(random_spawn)
-        local random_sec = random_spawn[math.random(1, #random_spawn)]
-
-        local new_member_id = squad:add_squad_member(random_sec, pos, lvid, gvid)
-        local se_obj = new_member_id and alife_object(new_member_id)
-        if se_obj then
-            squad_smart:register_npc(se_obj)
-            SIMBOARD:setup_squad_and_group(se_obj)
-        end
-
-        -- Update the squad
-        squad:update()
-    end
+			-- Update the squad
+			squad:update()
+		end
+	end
 end
 
 
