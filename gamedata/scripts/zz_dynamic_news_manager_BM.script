@@ -1,0 +1,185 @@
+local shw_random_msg = dynamic_news_manager.shw_random_msg
+local shw_surge = dynamic_news_manager.shw_surge
+local shw_reaction = dynamic_news_manager.shw_reaction
+local msg_duration = dynamic_news_manager.msg_duration
+local possible_factions = {
+	"army",
+	"bandit",
+	"csky",
+	"dolg",
+	"ecolog",
+	"freedom",
+	"killer",
+	"monolith",
+	"stalker",
+	"renegade",
+	"greh",
+	"isg"
+}
+
+local function blood_moon_started()
+	if (blood_moon_manager and blood_moon_manager.is_loaded() and blood_moon_manager.is_started()) then
+		return true
+	end
+	return false
+end
+
+local function blood_moon_complete()
+	if blood_moon_manager and blood_moon_manager.is_loaded() then
+		return blood_moon_manager.is_finished()
+	end
+	return true
+end
+
+local first_update = true
+
+OriginalTick= dynamic_news_manager.DynamicNewsManager.TickRandom
+function dynamic_news_manager.DynamicNewsManager:TickRandom()
+	if math.random(3) == 1 then
+		self:ReportNextBloodMoon()
+		--news_manager.send_tip(db.actor, "Blood moon soon!" , nil, "recent_surge", nil, nil)
+	else
+		OriginalTick(self)
+	end
+	return false
+ end
+
+local blood_moon_shift = not blood_moon_started()
+local counter_bm_during = 0
+
+OriginalToggle = dynamic_news_manager.DynamicNewsManager.NewsToggle
+function dynamic_news_manager.DynamicNewsManager:NewsToggle()
+	if first_update then
+		first_update = false
+		return OriginalToggle(self)
+	end
+	local flag = OriginalToggle(self)
+	--local BM = blood_moon_manager and blood_moon_manager.BloodMoonManager
+	if blood_moon_manager and blood_moon_started() then
+		flag = true
+		if (counter_bm_during > 5) then
+			self:GossipBloodMoonDuring()
+			counter_bm_during = 0
+		else
+			counter_bm_during = counter_bm_during + 1
+		end
+		self.surge_type = "blood moon"
+	end
+	if (blood_moon_shift and blood_moon_started()) then
+		blood_moon_shift = false
+		flag = true
+	elseif ((not blood_moon_shift) and blood_moon_complete()) then 
+		flag = true
+		self:GossipBloodMoonEnd(self.surge_type)
+		--news_manager.send_tip(db.actor, "Blood moon ended!" , nil, "recent_surge", nil, nil)
+	end
+	return flag
+end
+
+function dynamic_news_manager.DynamicNewsManager:ReportNextBloodMoon()
+	local BM, name, last_blood_moon_time, AccuracyTier, comm, Se, clr, msg, a, b, c, d, Tbl_msg
+	local IsBloodMoon = false
+	
+	name = game.translate_string("st_dyn_news_blood_moon")
+    BM = blood_moon_manager and blood_moon_manager.BloodMoonManager
+	if --[[(blood_moon_mcm.get_config("blood_moon\state")) and--]] (BM ~= nil and BM._delta ~= nil and not BM.started) then
+		last_blood_moon_time = BM and BM.last_blood_moon_time or game.get_game_time()
+		IsBloodMoon = true
+	end
+    
+	
+	-- preparing the news
+	if IsBloodMoon then
+		local g_time = game.get_game_time()
+		local blood_moon_start = BM and math.floor(BM._delta - g_time:diffSec(last_blood_moon_time))	
+		
+		-- %50 chance to pick News from people or natural faction
+		if math.random(2) == 1 then
+			if (not self.sentences_fnames) or (not self.sentences_fnames) then
+				return false
+			end
+			comm = "common"
+			Se = strformat("%s %s", self.sentences_fnames[math.random(#self.sentences_fnames)] , self.sentences_snames[math.random(#self.sentences_snames)] )
+			Tbl_msg = utils_data.collect_translations("st_dyn_news_blood_moon_template_",true)
+			if (not Tbl_msg) then return false end
+			a = Tbl_msg[math.random(#Tbl_msg)]
+			b = dynamic_news_helper.GetTimeString(math.floor(blood_moon_start/3600), math.random(4))
+			if (a and b and name) then
+				msg = utils_data.parse_string_keys( a , {["what"]=name , ["when"]=b} )
+			end
+		else
+			comm = possible_factions[math.random(#possible_factions)]
+			if (not comm) then return false end
+			Se = strformat("%s, %s" , game.translate_string("st_faction_" .. comm) , game.translate_string("st_dyn_news_sender_private_ch"))
+			if ((comm == "ecolog") or (comm == "csky") or (comm == "dolg") or (comm == "army")) then 
+				AccuracyTier = 5
+			else 
+				AccuracyTier = math.random(5)
+			end
+			Tbl_msg = utils_data.collect_translations("st_dyn_news_blood_moon_builder_start_" .. comm .. "_",true)
+			if (not Tbl_msg) then return false end
+			a = Tbl_msg[math.random(#Tbl_msg)]
+			Tbl_msg = utils_data.collect_translations("st_dyn_news_blood_moon_builder_mid_",true)
+			if (not Tbl_msg) then return false end
+			b = Tbl_msg[math.random(#Tbl_msg)]
+			Tbl_msg = utils_data.collect_translations("st_dyn_news_blood_moon_builder_end_" .. comm .. "_",true)
+			if (not Tbl_msg) then return false end
+			d = Tbl_msg[math.random(#Tbl_msg)]
+			c = dynamic_news_helper.GetTimeString(math.floor(blood_moon_start/3600), AccuracyTier)
+			if (a and b and c and d and name) then
+				local msg_mid = utils_data.parse_string_keys( b , {["what"]=name , ["when"]=c} )
+				msg = utils_data.parse_string_keys( "$start $mid. $end." , {["start"]=a , ["mid"]=msg_mid , ["end"]=d} )
+			end
+		end
+	end
+	
+	if not (msg and comm and Se) then
+		return false
+	end
+	
+	self:PushToChannel("general",{Mg=msg,Ic=comm,Snd="beep_1",Se=Se,It="gr"})
+	
+	return true
+end
+function dynamic_news_manager.DynamicNewsManager:GossipBloodMoonEnd(what) -- stalkers reacting about the blood moon
+	if (what ~= "blood moon") then
+		return false
+	end
+	
+	local sender = self:FindSpeakerRandom()
+	if self:IsSpecialNPC(sender) or self:IsMonoCommunity(sender) then
+		return false
+	end
+		
+	local tbl = utils_data.collect_translations("st_dyn_news_blood_moon_after_",true)
+	if (not tbl) then
+		return false
+	end
+	
+	local Se = strformat("%s, %s",sender:character_name(),dynamic_news_helper.GetCommunityDescription(sender,6))
+	local msg = utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["what"]=what } )
+	
+	dynamic_news_helper.send_tip(msg,Se,math.random(10,15),msg_duration,sender:character_icon(),"beep_1","npc")
+
+	self.surge_type = "" --reset
+	return true
+end
+
+function dynamic_news_manager.DynamicNewsManager:GossipBloodMoonDuring()
+	local sender = self:FindSpeakerRandom()
+	if self:IsSpecialNPC(sender) or self:IsMonoCommunity(sender) then
+		return false
+	end
+		
+	local tbl = utils_data.collect_translations("st_dyn_news_blood_moon_during_",true)
+	if (not tbl) then
+		return false
+	end
+	
+	local Se = strformat("%s, %s",sender:character_name(),dynamic_news_helper.GetCommunityDescription(sender,6))
+	local msg = utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["what"]="blood moon" } )
+	
+	dynamic_news_helper.send_tip(msg,Se,math.random(10,15),msg_duration,sender:character_icon(),"beep_1","npc")
+
+	return true
+end
