@@ -1,10 +1,16 @@
 local defaults = {
-    ["blood_moon_sate"] = 1,
-    ["blood_moon_frenquency"] = 12,
-	["blood_moon_safe_radius"] = 60,
+    ["state"] = 1,
+    ["frequency"] = 12,
+	["safe_radius"] = 60,
 	["max_zombie_spawn_count"] = 12,
 	["max_zombie_spuad_size"] = 9,
 	["number_of_spawning_smarts"] = 3,
+	["max_zombie_spawn_radius"] = 200,
+	["enable_debug"] = 0,
+	["news_during_event"] = 1,
+	["news_after_event"] = 1,
+	["news_before_event"] = 1,
+
 }
 
 -- Define the get_config function
@@ -20,10 +26,15 @@ op = { id= "blood_moon",sh=true ,gr={
 		{ id= "slide_blood_moon"			,type= "slide"	  ,link= "blood_moon_banner"	 ,text= "ui_mcm_title_blood_moon"		,size= {512,50}		,spacing= 20 },
 		{ id= "state"    	 	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "frequency"    	,type= "list"     ,val= 2	,def= 24	             ,content= {{2,"every_2h"}, {12,"every_12h"} , {24,"every_24h"} , {48,"every_2d"} , {96,"every_4d"}}  },
-		{ id= "safe_radius"		,type= "list"	  ,val= 2	,def= 60 	 	 ,content= {{30} , {60}}	,no_str= true  },
+		{ id= "safe_radius"		,type= "list"	  ,val= 2	,def= 60 	 	 ,content= {{30}, {40}, {50}, {60}}	,no_str= true  },
 		{ id= "max_zombie_spawn_count" 		,type= "list"	  ,val= 2	,def= 12		 ,content= {{6} , {9} , {12} , {15} , {18}}	,no_str= true  },
 		{ id= "max_zombie_squad_size"		,type= "list"	  ,val= 2	,def= 9			 ,content= {{3} , {6} , {9} , {12} , {15}}	,no_str= true  },
+		{ id= "max_zombie_spawn_radius"		,type= "list"	  ,val= 2	,def= 200		 ,content= {{150} , {160} , {170} , {180} , {190}, {200}}	,no_str= true  },
 		{ id= "number_of_spawning_smarts"	,type= "list"	  ,val= 2	,def= 3			 ,content= {{1} , {2} , {3} , {4} , {5}}	,no_str= true  },
+		{ id= "news_before_event"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "news_during_event"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "news_after_event"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "enable_debug"    	 	,type= "check"    ,val= 1	,def= false	   },
       }
     }
 function on_mcm_load()

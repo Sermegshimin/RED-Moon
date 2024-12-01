@@ -39,8 +39,8 @@
 		<text>Every 2-4 days</text>
 	</string>
 	
-	<string id="ui_mcm_blood_moon_safe_radius">
-		<text>Safe radius</text>
+	<string id="ui_mcm_blood_moon_max_zombie_spawn_radius">
+		<text>Maximal distance zombies will spawn at</text>
 	</string>
 	
 	<string id="ui_mcm_blood_moon_max_zombie_spawn_count">
@@ -51,8 +51,24 @@
 		<text>Zombie squad size</text>
 	</string>
 	
-	<string id="ui_mcm_blood_moon_number_of_spawning_smarts">
-		<text>Number of spawning smarts</text>
+	<string id="ui_mcm_blood_moon_enable_debug">
+		<text>Debug mode</text>
 	</string>
+	<string id="ui_mcm_blood_moon_news_during_event">
+		<text>Receive messages during the event</text>
+	</string>
+	<string id="ui_mcm_blood_moon_news_after_event">
+		<text>Receive messages with reactions to the event</text>
+	</string>
+	<string id="ui_mcm_blood_moon_news_before_event">
+		<text>Receive messages that predict the event</text>
+	</string>
+	<string id="ui_mcm_blood_moon_safe_radius">
+		<text>Safe radius</text>
+	</string>
+	<string id="ui_mcm_blood_moon_number_of_spawning_smarts">
+		<text>Quantity of smarts zombies will spawn at</text>
+	</string>
+	
 
 </string_table>

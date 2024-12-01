@@ -21,18 +21,18 @@ local diff_game_sec			= -1
 -- VARIABLES USED FOR SPAWNING FUNCTIONS. MOST CAN BE ADDED TO MCM. MOVE THEM WHERE NEEDED
 
 local available_smart_terrains = {} -- list of availabe smarts for spawning
-local blood_moon_safe_radius = 60 -- add to MCM 30 - 60 value would be good
-local blood_moon_max_spawn_radius = 150 -- add to MCM 150 - 200 value would be good. Squads beyond this distance will be despawned to give way to spawning on nearer smarts.
+local blood_moon_safe_radius = blood_moon_mcm.get_config("safe_radius") -- add to MCM(done!)
+local blood_moon_max_spawn_radius = blood_moon_mcm.get_config("max_zombie_spawn_radius") -- add to MCM (done!). Squads beyond this distance will be despawned to give way to spawning on nearer smarts.
 local blood_moon_active_spawns = {} -- table containing the squad IDs of all spawned zombies.
 local smart_terrain_exemptions = {}
-local max_zombie_spawn_count = 12  -- add to MCM - used to adjust max active zombie spawns. When a squad is eliminated, script spawns another squad.
-local max_zombie_squad_size = 6 -- add to MCM - I've set ltx squad size to 3 so this will increase squad sizes randomly to this number. Gives squads some variety in squad number
-local number_of_spawning_smarts = 4  -- add to MCM - used to adjust number of nearest smarts that will spawn mutants.
+local max_zombie_spawn_count =  blood_moon_mcm.get_config("max_zombie_spawn_count") -- add to MCM (done!)- used to adjust max active zombie spawns. When a squad is eliminated, script spawns another squad.
+local max_zombie_squad_size = blood_moon_mcm.get_config("max_zombie_squad_size") -- add to MCM (done!)- I've set ltx squad size to 3 so this will increase squad sizes randomly to this number. Gives squads some variety in squad number
+local number_of_spawning_smarts = blood_moon_mcm.get_config("number_of_spawning_smarts")  -- add to MCM (done!)- used to adjust number of nearest smarts that will spawn mutants.
 
 class "CBloodMoonManager"
 function CBloodMoonManager:__init() --Is called upon the creation of the class instance (immediately)
-	spawned_mutant_ids = {} --It's better to initialize these tables with the class instance
-	nearest_smarts_to_spawn = {} --Currently not used() because It crashed
+	spawned_mutant_ids = {}
+	nearest_smarts_to_spawn = {}
 end
 
 function CBloodMoonManager:initialize() --Initializes some important variables
@@ -45,11 +45,11 @@ function CBloodMoonManager:initialize() --Initializes some important variables
 	end 
 	
 	if not (self._delta) then 
-		local freq = ui_options.get("alife/event/blood_moon_frequency")
+		local freq = blood_moon_mcm.get_config("frequency")
 		self._delta = math.random(math.floor(freq/2)*3600, freq*3600)
 	end
 	
-	self.blood_moon_duration = 254 -- (duration: about 40mins of game time)
+	self.blood_moon_duration = 254 -- (duration: about 40mins of game time == 254)
 	
 	self.time_forwarded = false
 end
@@ -130,11 +130,6 @@ function CBloodMoonManager:finish(manual) --Ends the event and is called by the 
 		level.stop_weather_fx()
 		level_weathers.get_weather_manager():forced_weather_change()
 	end
-	for k,snd in pairs(surge_manager.SurgeManager.blowout_sounds) do
-		if snd ~= nil and snd:playing() then
-			snd:stop()
-		end
-	end
 	prev_sec = 0
 	
 	self.stages = empty_table(self.stages)
@@ -182,7 +177,7 @@ function CBloodMoonManager:update() --this function is called a lot of times con
         end
         self:start()
         return
-    elseif (surge_manager.is_started()) then 
+    elseif (surge_manager.is_started() or psi_storm_manager.is_started()) then 
         self:skip_blood_moon()
     end
 
@@ -197,30 +192,27 @@ function CBloodMoonManager:update() --this function is called a lot of times con
 
         SetEvent("blood_moon", "time", diff_sec)
         
-        if (not ui_options.get("alife/event/blood_moon_state")) then
+        if (not blood_moon_mcm.get_config("state")) then --Replaced to mcm value
             self:finish()
             return
         end
 
         -- Blood Moon begins -------------------------------------------------------------------------
-	pr("!Blood moon starting")
+		pr("!Blood moon starting")
         if (diff_sec >= 0) and (self.stages['beginning'] == nil) then
             level.set_weather_fx("fx_blood_night")
             self.stages['beginning'] = true
         end
-	if (diff_sec >= 64) and (self.stages['first_wave'] == nil) then
-		self.stages['first_wave'] = true
+		if (diff_sec >= 64) and (self.stages['first_wave'] == nil) then
+			self.stages['first_wave'] = true
 
-		blood_moon_active_spawns = {} -- initialize active spawns table
-		spawn_zombies_on_nearest_smarts() -- spawn zombies
+			blood_moon_active_spawns = {} -- initialize active spawns table
+			spawn_zombies_on_nearest_smarts() -- spawn zombies
+		end
 
-	end
-
-	if (diff_sec % 30 == 0) then 
-			
-		spawn_zombies_on_nearest_smarts() -- spawn zombies
-
-	end
+		if (diff_sec % 30 == 0) then 
+			spawn_zombies_on_nearest_smarts() -- spawn zombies
+		end
     end
 end
 
@@ -557,7 +549,18 @@ function add_squad_members(squad, max_squad_count)
 	end
 end
 
+function on_key_press(key)
+	if (key == DIK_keys.DIK_M) and (blood_moon_mcm.get_config("enable_debug")) then
+		local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or game.get_game_time()
+		local g_time = game.get_game_time()
+		local surge_start = math.floor(BloodMoonManager._delta - g_time:diffSec(last_blood_moon_time))
+		c = tostring(math.floor(surge_start/60))
+		news_manager.send_tip(db.actor, "Before blood moon - " .. c .. " minutes" , nil, "recent_surge", nil, nil)
+	end
+end
+
 
 function on_game_start()
 	RegisterScriptCallback("server_entity_on_unregister", server_entity_on_unregister)
+	RegisterScriptCallback("on_key_press", on_key_press)
 end

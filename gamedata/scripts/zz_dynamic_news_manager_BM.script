@@ -1,6 +1,6 @@
-local shw_random_msg = dynamic_news_manager.shw_random_msg
-local shw_surge = dynamic_news_manager.shw_surge
-local shw_reaction = dynamic_news_manager.shw_reaction
+local shw_blood_moon = blood_moon_mcm.get_config("news_before_event")
+local shw_reaction = blood_moon_mcm.get_config("news_after_event")
+local shw_during_bm = blood_moon_mcm.get_config("news_during_event")
 local msg_duration = dynamic_news_manager.msg_duration
 local possible_factions = {
 	"army",
@@ -31,11 +31,9 @@ local function blood_moon_complete()
 	return true
 end
 
-local first_update = true
-
 OriginalTick= dynamic_news_manager.DynamicNewsManager.TickRandom
 function dynamic_news_manager.DynamicNewsManager:TickRandom()
-	if math.random(3) == 1 then
+	if shw_blood_moon and (math.random(4) == 1) then
 		self:ReportNextBloodMoon()
 		--news_manager.send_tip(db.actor, "Blood moon soon!" , nil, "recent_surge", nil, nil)
 	else
@@ -46,6 +44,7 @@ function dynamic_news_manager.DynamicNewsManager:TickRandom()
 
 local blood_moon_shift = not blood_moon_started()
 local counter_bm_during = 0
+local first_update = true
 
 OriginalToggle = dynamic_news_manager.DynamicNewsManager.NewsToggle
 function dynamic_news_manager.DynamicNewsManager:NewsToggle()
@@ -57,11 +56,13 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 	--local BM = blood_moon_manager and blood_moon_manager.BloodMoonManager
 	if blood_moon_manager and blood_moon_started() then
 		flag = true
-		if (counter_bm_during > 5) then
-			self:GossipBloodMoonDuring()
-			counter_bm_during = 0
-		else
-			counter_bm_during = counter_bm_during + 1
+		if (shw_during_bm) then
+			if	(counter_bm_during > 5) then
+				self:GossipBloodMoonDuring()
+				counter_bm_during = 0
+			else
+				counter_bm_during = counter_bm_during + 1
+			end
 		end
 		self.surge_type = "blood moon"
 	end
@@ -82,7 +83,7 @@ function dynamic_news_manager.DynamicNewsManager:ReportNextBloodMoon()
 	
 	name = game.translate_string("st_dyn_news_blood_moon")
     BM = blood_moon_manager and blood_moon_manager.BloodMoonManager
-	if --[[(blood_moon_mcm.get_config("blood_moon\state")) and--]] (BM ~= nil and BM._delta ~= nil and not BM.started) then
+	if (blood_moon_mcm.get_config("state")) and (BM ~= nil and BM._delta ~= nil and not BM.started) then
 		last_blood_moon_time = BM and BM.last_blood_moon_time or game.get_game_time()
 		IsBloodMoon = true
 	end
@@ -142,6 +143,10 @@ function dynamic_news_manager.DynamicNewsManager:ReportNextBloodMoon()
 	return true
 end
 function dynamic_news_manager.DynamicNewsManager:GossipBloodMoonEnd(what) -- stalkers reacting about the blood moon
+	if (not shw_reaction) then
+		return false
+	end
+	
 	if (what ~= "blood moon") then
 		return false
 	end
