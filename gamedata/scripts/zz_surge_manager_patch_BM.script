@@ -1,0 +1,37 @@
+function main_loop()
+	local tg = time_global()
+	if (_tmr and tg < _tmr) then 
+		return false 
+	end
+	_tmr = tg + 1000
+	
+	if not (db.actor and db.actor.afterFirstUpdate) then 
+		return false
+	end
+	
+	blood_moon_manager.get_blood_moon_manager():update()
+
+	if level.get_time_factor() ~= normal_time_factor and (not blood_moon_manager.is_started()) then
+		if blood_moon_manager.is_finished() then
+			level.set_time_factor(normal_time_factor)
+		end
+	end
+	
+	return false
+end
+
+function on_game_start()
+	AddUniqueCall(main_loop)
+end
+
+--[[surge_manager.actor_on_sleep = function(hours)
+	surge_manager.get_surge_manager().time_forwarded = true
+	psi_storm_manager.get_psi_storm_manager().time_forwarded = true
+	blood_moon_manager.get_blood_moon_manager().time_forwarded = true
+
+	
+	if(surge.manager.is_started() and level_weathers.get_weather_manager().weather_fx) then
+		level.stop_weather_fx()
+	end
+	level_weathers.get_weather_manager():forced_weather_change()
+end --]]
