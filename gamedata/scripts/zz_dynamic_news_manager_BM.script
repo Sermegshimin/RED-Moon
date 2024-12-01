@@ -31,27 +31,24 @@ local function blood_moon_complete()
 	return true
 end
 
+local first_update = true
+
 OriginalTick= dynamic_news_manager.DynamicNewsManager.TickRandom
 function dynamic_news_manager.DynamicNewsManager:TickRandom()
-	if shw_blood_moon and (math.random(4) == 1) then
+	if (not first_update) and shw_blood_moon and (math.random(4) == 1) then
 		self:ReportNextBloodMoon()
-		--news_manager.send_tip(db.actor, "Blood moon soon!" , nil, "recent_surge", nil, nil)
 	else
 		OriginalTick(self)
+		first_update = false
 	end
 	return false
  end
 
 local blood_moon_shift = not blood_moon_started()
 local counter_bm_during = 0
-local first_update = true
 
 OriginalToggle = dynamic_news_manager.DynamicNewsManager.NewsToggle
 function dynamic_news_manager.DynamicNewsManager:NewsToggle()
-	if first_update then
-		first_update = false
-		return OriginalToggle(self)
-	end
 	local flag = OriginalToggle(self)
 	--local BM = blood_moon_manager and blood_moon_manager.BloodMoonManager
 	if blood_moon_manager and blood_moon_started() then
@@ -73,6 +70,18 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 		flag = true
 		self:GossipBloodMoonEnd(self.surge_type)
 		--news_manager.send_tip(db.actor, "Blood moon ended!" , nil, "recent_surge", nil, nil)
+	end
+	if flag then
+		for ch,messages in pairs(self.queue) do
+			local c = #messages
+			while c > 0 do
+				local message = messages[c]
+				if (message) then
+					messages[c] = nil
+				end
+				c = c - 1
+			end
+		end
 	end
 	return flag
 end
