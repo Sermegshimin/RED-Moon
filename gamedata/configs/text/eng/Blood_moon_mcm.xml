@@ -9,29 +9,33 @@
 	<string id="ui_mcm_menu_blood_moon">
 		<text>Blood moon</text>
 	</string>
-	<string id="ui_mcm_menu_blood_moon_title">
+	<string id="ui_mcm_title_blood_moon">
 		<text>Blood moon</text>
 	</string>
 
-	<string id="ui_mcm_blood_moon_blood_moon_state">
+	<string id="ui_mcm_blood_moon_state">
 		<text>Enable Blood moon</text>
 	</string>
 
-	<string id="ui_mcm_blood_moon_blood_moon_frequency">
+	<string id="ui_mcm_blood_moon_frequency">
 		<text>Blood moon frequency</text>
 	</string>
-	<string id="ui_mcm_blood_moon_every_6_12_hours">
+	<string id="ui_mcm_lst_every_2h">
+		<text>Every 1-2 hours</text>
+	</string>
+
+	<string id="ui_mcm_lst_every_12h">
 		<text>Every 6-12 hours</text>
 	</string>
 
-	<string id="ui_mcm_blood_moon_every_12_24_hours">
+	<string id="ui_mcm_lst_every_24h">
 		<text>Every 12-24 hours</text>
 	</string>
-	<string id="ui_mcm_blood_moon_every_1_2_days">
+	<string id="ui_mcm_lst_every_2d">
 		<text>Every 1-2days</text>
 	</string>
 
-	<string id="ui_mcm_blood_moon_every_2_4_days">
+	<string id="ui_mcm_lst_every_4d">
 		<text>Every 2-4 days</text>
 	</string>
 	
@@ -43,7 +47,7 @@
 		<text>Maximum zombie spawn count</text>
 	</string>
 	
-	<string id="ui_mcm_blood_moon_zombie_squad_size">
+	<string id="ui_mcm_blood_moon_max_zombie_squad_size">
 		<text>Zombie squad size</text>
 	</string>
 	
