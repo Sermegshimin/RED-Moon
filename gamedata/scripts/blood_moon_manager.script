@@ -340,6 +340,19 @@ function distance_3d(p1, p2)
 	return p1:distance_to(p2)
 end
 
+function blood_moon_started()
+	if is_loaded() and is_started() then
+		return true
+	end
+	return false
+end
+
+function blood_moon_complete()
+	if is_loaded() then
+		return is_finished()
+	end
+	return true
+end
 
 -- Utilities for Blood Moon Spawning mutants: %s attempt
 
