@@ -31,15 +31,12 @@ local function blood_moon_complete()
 	return true
 end
 
-local first_update = true
-
 OriginalTick= dynamic_news_manager.DynamicNewsManager.TickRandom
 function dynamic_news_manager.DynamicNewsManager:TickRandom()
-	if (not first_update) and shw_blood_moon and (math.random(4) == 1) then
+	if shw_blood_moon and (math.random(4) == 1) then
 		self:ReportNextBloodMoon()
 	else
 		OriginalTick(self)
-		first_update = false
 	end
 	return false
  end
