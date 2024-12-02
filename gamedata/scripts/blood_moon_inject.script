@@ -4,7 +4,7 @@ function CMD.blood_moon(me,txt,owner,p)
 	local wrd = debug_cmd_list.check_and_set_help(me,txt,owner,"[start|stop]")
 	if not (wrd) then return end
 
-	local sm = blood_moon_manager and blood_moon_manager.PsiStormManager
+	local sm = blood_moon_manager and blood_moon_manager.BloodMoonManager
 	if not (sm) then return "No blood_moon manager!" end
 
 	if (wrd == "start") then
