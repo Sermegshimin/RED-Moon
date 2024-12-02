@@ -1,7 +1,8 @@
 local shw_blood_moon = blood_moon_mcm.get_config("news_before_event")
 local shw_reaction = blood_moon_mcm.get_config("news_after_event")
 local shw_during_bm = blood_moon_mcm.get_config("news_during_event")
-local msg_duration = dynamic_news_manager.msg_duration
+local msg_duration = ui_options.get("alife/dynamic_news/message_duration")
+local bm = blood_moon_manager
 local possible_factions = {
 	"army",
 	"bandit",
@@ -17,38 +18,26 @@ local possible_factions = {
 	"isg"
 }
 
-local function blood_moon_started()
-	if (blood_moon_manager and blood_moon_manager.is_loaded() and blood_moon_manager.is_started()) then
-		return true
-	end
-	return false
-end
-
-local function blood_moon_complete()
-	if blood_moon_manager and blood_moon_manager.is_loaded() then
-		return blood_moon_manager.is_finished()
-	end
-	return true
-end
-
-OriginalTick= dynamic_news_manager.DynamicNewsManager.TickRandom
+OriginalTick = dynamic_news_manager.DynamicNewsManager.TickRandom
 function dynamic_news_manager.DynamicNewsManager:TickRandom()
 	if shw_blood_moon and (math.random(4) == 1) then
+		if self:NewsToggle() or (not item_device.is_pda_charged(true)) then
+			return false
+		end
 		self:ReportNextBloodMoon()
 	else
-		OriginalTick(self)
+		OriginalTick(self)	
 	end
 	return false
  end
 
-local blood_moon_shift = not blood_moon_started()
+local blood_moon_shift = not bm.blood_moon_started()
 local counter_bm_during = 0
 
 OriginalToggle = dynamic_news_manager.DynamicNewsManager.NewsToggle
 function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 	local flag = OriginalToggle(self)
-	--local BM = blood_moon_manager and blood_moon_manager.BloodMoonManager
-	if blood_moon_manager and blood_moon_started() then
+	if bm and bm.blood_moon_started() then
 		flag = true
 		if (shw_during_bm) then
 			if	(counter_bm_during > 5) then
@@ -59,16 +48,6 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 			end
 		end
 		self.surge_type = "blood moon"
-	end
-	if (blood_moon_shift and blood_moon_started()) then
-		blood_moon_shift = false
-		flag = true
-	elseif ((not blood_moon_shift) and blood_moon_complete()) then 
-		flag = true
-		self:GossipBloodMoonEnd(self.surge_type)
-		--news_manager.send_tip(db.actor, "Blood moon ended!" , nil, "recent_surge", nil, nil)
-	end
-	if flag then
 		for ch,messages in pairs(self.queue) do
 			local c = #messages
 			while c > 0 do
@@ -80,15 +59,20 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 			end
 		end
 	end
+	if (blood_moon_shift and bm.blood_moon_started()) then
+		blood_moon_shift = false
+	elseif ((not blood_moon_shift) and bm.blood_moon_complete()) then 
+		self:GossipBloodMoonEnd(self.surge_type)
+	end
 	return flag
 end
 
 function dynamic_news_manager.DynamicNewsManager:ReportNextBloodMoon()
-	local BM, name, last_blood_moon_time, AccuracyTier, comm, Se, clr, msg, a, b, c, d, Tbl_msg
+	local name, last_blood_moon_time, AccuracyTier, comm, Se, clr, msg, a, b, c, d, Tbl_msg
 	local IsBloodMoon = false
+	local BM = bm and bm.BloodMoonManager
 	
 	name = game.translate_string("st_dyn_news_blood_moon")
-    BM = blood_moon_manager and blood_moon_manager.BloodMoonManager
 	if (blood_moon_mcm.get_config("state")) and (BM ~= nil and BM._delta ~= nil and not BM.started) then
 		last_blood_moon_time = BM and BM.last_blood_moon_time or game.get_game_time()
 		IsBloodMoon = true
@@ -148,6 +132,7 @@ function dynamic_news_manager.DynamicNewsManager:ReportNextBloodMoon()
 	
 	return true
 end
+
 function dynamic_news_manager.DynamicNewsManager:GossipBloodMoonEnd(what) -- stalkers reacting about the blood moon
 	if (not shw_reaction) then
 		return false
