@@ -91,7 +91,7 @@ end
 function CBloodMoonManager:new_blood_moon_time() --Defines when the next blood moon is gonna happen
 	self.last_blood_moon_time 	= game.get_game_time()
 	
-	local freq = ui_options.get("alife/event/blood_moon_frequency")
+	local freq = blood_moon_mcm.get_config("frequency")
 	self._delta = math.random(math.floor(freq/2)*3600, freq*3600) 
 end
 
