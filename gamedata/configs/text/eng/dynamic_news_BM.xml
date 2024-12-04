@@ -111,7 +111,7 @@ During blood moon
 		<text>No! Don't touch me! Don't touch me!</text>
 	</string>
 	<string id="st_dyn_news_blood_moon_during_5">
-		<text>Aaaaaaa! They are everywhere! What do I do?!</text>
+		<text>Aaaaaaarh! They are everywhere! What do I do?!</text>
 	</string>
 	<string id="st_dyn_news_blood_moon_during_6">
 		<text>Come here, bastards! I will make some cheese out of you!</text>
@@ -127,6 +127,36 @@ During blood moon
 	</string>
 	<string id="st_dyn_news_blood_moon_during_10">
 		<text>These zombies are so dumb! The quantity, though...</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_11">
+		<text>I am cornered, but I won't give up!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_12">
+		<text>It is life and death game of tag. Let's see who ends up on top!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_13">
+		<text>I just can't die here! Not today!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_14">
+		<text>Watch your six! Another crowd is approaching from the back!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_15">
+		<text>Stick together, guys! Teamwork is the key to surviving!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_16">
+		<text>Hell no! I am not going there!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_17">
+		<text>It is time to test my new gun!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_18">
+		<text>It is over! It is the end for us!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_19">
+		<text>I knew it! There's no such thing as a free lunch. This is the price I have to pay.</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_during_20">
+		<text>Emissions, psi-storms and now this?! I am out.</text>
 	</string>
 	
 <!-- 
@@ -228,28 +258,6 @@ Blood moon builder by faction
 	</string>
 	<string id="st_dyn_news_blood_moon_builder_start_bandit_7">
 		<text>Sultan said</text>
-	</string>
-
-	<string id="st_dyn_news_blood_moon_builder_start_renegade_1">
-		<text>Got info from the Garbage,</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_renegade_2">
-		<text>Heard some shit from the Bar,</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_renegade_3">
-		<text>One of our guys talked about</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_renegade_4">
-		<text>Our bros from the north are saying</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_renegade_5">
-		<text>Our fellas in Meadow mentioned that</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_renegade_6">
-		<text>Overheard some chit-chat at the Meadow...</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_renegade_7">
-		<text>Yoga said</text>
 	</string>
 
 	<string id="st_dyn_news_blood_moon_builder_start_csky_1">
@@ -362,28 +370,6 @@ Blood moon builder by faction
 		<text>The boss mentioned</text>
 	</string>
 
-	<string id="st_dyn_news_blood_moon_builder_start_isg_1">
-		<text>Boys, don't screw about</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_isg_2">
-		<text>Got an important message,</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_isg_3">
-		<text>Got some info,</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_isg_4">
-		<text>Heard from the boss that,</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_isg_5">
-		<text>Intercepted some scientist messages,</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_isg_6">
-		<text>Sources say that</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_start_isg_7">
-		<text>The boss mentioned</text>
-	</string>
-
 	<string id="st_dyn_news_blood_moon_builder_start_monolith_1">
 		<text>The C-Consciousness has given the signal,</text>
 	</string>
@@ -464,23 +450,7 @@ Blood moon builder by faction
 		<text>Better stick your ass around</text>
 	</string>
 	<string id="st_dyn_news_blood_moon_builder_end_bandit_5">
-		<text>They are coming!</text>
-	</string>
-
-	<string id="st_dyn_news_blood_moon_builder_end_renegade_1">
-		<text>Expecting a fucked-up time</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_end_renegade_2">
-		<text>Seems like we got a bad deal</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_end_renegade_3">
-		<text>Hide the vodka, check your bullets!</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_end_renegade_4">
-		<text>Better stick your ass around</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_end_renegade_5">
-		<text>They are coming!</text>
+		<text>They are coming</text>
 	</string>
 
 	<string id="st_dyn_news_blood_moon_builder_end_army_1">
@@ -545,19 +515,6 @@ Blood moon builder by faction
 		<text>Stay safe</text>
 	</string>
 	<string id="st_dyn_news_blood_moon_builder_end_killer_4">
-		<text>You've been warned</text>
-	</string>
-
-	<string id="st_dyn_news_blood_moon_builder_end_isg_1">
-		<text>It's gonna get ugly</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_end_isg_2">
-		<text>You better stay close to your hideouts</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_end_isg_3">
-		<text>Stay safe</text>
-	</string>
-	<string id="st_dyn_news_blood_moon_builder_end_isg_4">
 		<text>You've been warned</text>
 	</string>
 

@@ -39,7 +39,7 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 	local flag = OriginalToggle(self)
 	if bm and bm.blood_moon_started() then
 		flag = true
-		if (shw_during_bm) then
+		if (shw_during_bm) and (xr_conditions.surge_complete()) then
 			if	(counter_bm_during > 5) then
 				self:GossipBloodMoonDuring()
 				counter_bm_during = 0
