@@ -260,6 +260,50 @@ Blood moon builder by faction
 		<text>Sultan said</text>
 	</string>
 
+	<string id="st_dyn_news_blood_moon_builder_start_renegade_1">
+		<text>Got info from the Garbage,</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_renegade_2">
+		<text>Heard some shit from the Bar,</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_renegade_3">
+		<text>One of our guys talked about</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_renegade_4">
+		<text>Our bros from the north are saying</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_renegade_5">
+		<text>Our fellas in Meadow mentioned that</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_renegade_6">
+		<text>Overheard some chit-chat at the Meadow...</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_renegade_7">
+		<text>Yoga said</text>
+	</string>
+
+	<string id="st_dyn_news_blood_moon_builder_start_isg_1">
+		<text>Boys, don't screw about</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_isg_2">
+		<text>Got an important message,</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_isg_3">
+		<text>Got some info,</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_isg_4">
+		<text>Heard from the boss that,</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_isg_5">
+		<text>Intercepted some scientist messages,</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_isg_6">
+		<text>Sources say that</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_start_isg_7">
+		<text>The boss mentioned</text>
+	</string>
+
 	<string id="st_dyn_news_blood_moon_builder_start_csky_1">
 		<text>Attention! Our sensors have picked up critical information,</text>
 	</string>
@@ -451,6 +495,35 @@ Blood moon builder by faction
 	</string>
 	<string id="st_dyn_news_blood_moon_builder_end_bandit_5">
 		<text>They are coming</text>
+	</string>
+
+	<string id="st_dyn_news_blood_moon_builder_end_renegade_1">
+		<text>Expecting a fucked-up time</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_end_renegade_2">
+		<text>Seems like we got a bad deal</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_end_renegade_3">
+		<text>Hide the vodka, check your bullets!</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_end_renegade_4">
+		<text>Better stick your ass around</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_end_renegade_5">
+		<text>They are coming!</text>
+	</string>
+
+	<string id="st_dyn_news_blood_moon_builder_end_isg_1">
+		<text>It's gonna get ugly</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_end_isg_2">
+		<text>You better stay close to your hideouts</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_end_isg_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_blood_moon_builder_end_isg_4">
+		<text>You've been warned</text>
 	</string>
 
 	<string id="st_dyn_news_blood_moon_builder_end_army_1">
