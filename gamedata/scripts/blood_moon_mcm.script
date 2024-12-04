@@ -1,6 +1,6 @@
 local defaults = {
     ["state"] = 1,
-    ["frequency"] = 12,
+    ["frequency"] = 3,
 	["safe_radius"] = 60,
 	["max_zombie_spawn_count"] = 12,
 	["max_zombie_spuad_size"] = 9,
