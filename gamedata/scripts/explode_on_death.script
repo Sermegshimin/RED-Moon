@@ -1,0 +1,48 @@
+local blood_moon_zombies = {
+    "hayzed_weak", "hayzed_normal", "hayzed_strong", "lady_weak", "lady_normal", "lady_strong", "skyrim_male", "skyrim_female"
+}
+
+function explode_npc(npc)
+    if not npc then
+        return
+    end
+
+    local body_tear_effect = particles_object("anomaly2\\body_tear_0" .. math.random(1, 2))
+    if body_tear_effect then
+        body_tear_effect:play_at_pos(npc:position())
+    end
+
+    local body_tear_sound = sound_object("anomaly\\anomaly_body_tear_1")
+    if body_tear_sound then
+        body_tear_sound:play_at_pos(npc, npc:position())
+        body_tear_sound.volume = 1
+    end
+
+    npc:kill(npc)
+    npc_id = npc:id()
+    se_npc = alife_object(npc_id) 
+    safe_release_manager.release(se_npc) 
+end
+
+
+function explode_on_death(npc, who)
+    if not IsMonster(npc) then return end
+
+    local function matches_section(section)
+        for _, value in ipairs(blood_moon_zombies) do
+            if section == value then
+                return true
+            end
+        end
+        return false
+    end
+    if matches_section(npc:section()) then
+        explode_npc(npc)
+    end
+    
+end
+
+-- Initialize the script on game start
+function on_game_start()
+    RegisterScriptCallback("monster_on_death_callback", explode_on_death)
+end
