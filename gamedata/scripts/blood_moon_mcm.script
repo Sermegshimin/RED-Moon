@@ -10,6 +10,7 @@ local defaults = {
 	["news_during_event"] = 1,
 	["news_after_event"] = 1,
 	["news_before_event"] = 1,
+	["sleepless_blood_moon"] = 1,
 
 }
 
@@ -34,6 +35,7 @@ op = { id= "blood_moon",sh=true ,gr={
 		{ id= "news_before_event"    	 	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "news_during_event"    	 	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "news_after_event"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "sleepless_blood_moon"    	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "enable_debug"    	 	,type= "check"    ,val= 1	,def= false	   },
       }
     }
