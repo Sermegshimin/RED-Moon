@@ -23,7 +23,7 @@ local diff_game_sec			= -1
 local available_smart_terrains = {} -- list of availabe smarts for spawning
 local blood_moon_safe_radius = blood_moon_mcm.get_config("safe_radius") -- add to MCM(done!)
 local blood_moon_max_spawn_radius = blood_moon_mcm.get_config("max_zombie_spawn_radius") -- add to MCM (done!). Squads beyond this distance will be despawned to give way to spawning on nearer smarts.
-local blood_moon_active_spawns = {} -- table containing the squad IDs of all spawned zombies.
+local blood_moon_active_spawns = {} -- table containing the npc IDs of all spawned zombies.
 local smart_terrain_exemptions = {}
 local max_zombie_spawn_count =  blood_moon_mcm.get_config("max_zombie_spawn_count") -- add to MCM (done!)- used to adjust max active zombie spawns. When a squad is eliminated, script spawns another squad.
 local max_zombie_squad_size = blood_moon_mcm.get_config("max_zombie_squad_size") -- add to MCM (done!)- I've set ltx squad size to 3 so this will increase squad sizes randomly to this number. Gives squads some variety in squad number
@@ -140,6 +140,8 @@ function CBloodMoonManager:finish(manual) --Ends the event and is called by the 
 	
 	self.stages = empty_table(self.stages)
 
+	release_all_blood_moon_zombies()
+
 	level.set_time_factor(self.game_time_factor)
 end
 
@@ -210,14 +212,15 @@ function CBloodMoonManager:update() --this function is called a lot of times con
 			level.set_weather_fx("fx_blood_night")
             self.stages['beginning'] = true
         end
-		if (diff_sec >= 64) and (self.stages['first_wave'] == nil) then
+		if (diff_sec >= 10) and (self.stages['first_wave'] == nil) then
 			self.stages['first_wave'] = true
 
 			blood_moon_active_spawns = {} -- initialize active spawns table
 			spawn_zombies_on_nearest_smarts() -- spawn zombies
 		end
 
-		if (diff_sec % 40 == 0) then 
+		if (diff_sec % 40 == 0) then
+			release_distant_npcs(blood_moon_max_spawn_radius)
 			spawn_zombies_on_nearest_smarts() -- spawn zombies
 		end
     end
@@ -419,17 +422,15 @@ function get_se_obj_level_name(se_obj)
     return target_level_name
 end
 
-function is_squad_beyond_distance(squad_id, distance)
-	local squad = alife_object(squad_id)
-	if squad then
-	  local commander_id = squad:commander_id()
-	  local commander = alife_object(commander_id)
-	  if commander and commander.position then
+function is_npc_beyond_distance(npc_id, distance)
+	local npc = alife_object(npc_id)
+	if npc then
+	  if npc and npc.position then
 		local actor_pos = db.actor:position()
-		local commander_pos = commander.position
-		return actor_pos:distance_to(commander_pos) > distance
+		local npc_pos = npc.position
+		return actor_pos:distance_to(npc_pos) > distance
 	  else
-		pr("Warning: Commander not found or position unavailable for squad: %s", squad_id)
+		pr("Warning: Npc not found or position unavailable for npc: %s", npc_id)
 		return false 
 	  end
 	else
@@ -437,26 +438,26 @@ function is_squad_beyond_distance(squad_id, distance)
 	end
   end
 
-function release_distant_squads(distance)
-	local squads_to_remove = {} 
+function release_distant_npcs(distance)
+	local npcs_to_remove = {} 
   
 	for i, spawn in ipairs(blood_moon_active_spawns) do
-	  if is_squad_beyond_distance(spawn.mutant_id, distance) then
-		table.insert(squads_to_remove, i)
+	  if is_npc_beyond_distance(spawn.npc_id, distance) then
+		table.insert(npcs_to_remove, i)
 	  end
 	end
   
-	for i = #squads_to_remove, 1, -1 do 
-	  local index = squads_to_remove[i]
-	  local squad_id = blood_moon_active_spawns[index].mutant_id
-	  local squad = alife_object(squad_id)
+	for i = #npcs_to_remove, 1, -1 do 
+	  local index = npcs_to_remove[i]
+	  local npc_id = blood_moon_active_spawns[index].npc_id
+	  local npc = alife_object(npc_id)
   
-	  if squad then
-		safe_release_manager.release(squad)
+	  if npc then
+		safe_release_manager.release(npc)
 		table.remove(blood_moon_active_spawns, index)
-		pr("Blood Moon: Released distant squad: %s", squad_id)
+		pr("Blood Moon: Released distant npc: %s", npc_id)
 	  else
-		pr("Warning: Squad %s not found for release.", squad_id)
+		pr("Warning: Npcs %s not found for release.", npc_id)
 	  end
 	end
 end
@@ -505,18 +506,23 @@ function spawn_zombies_on_nearest_smarts()
 	for i = 1, math.min(number_of_spawning_smarts, #nearest_smarts) do
 	  table.insert(smarts_to_use, nearest_smarts[i])
 	end
-
+	local counter_zombie_squads = 0
 	for _, smart_id in ipairs(smarts_to_use) do
-		if #blood_moon_active_spawns < max_zombie_spawn_count then
+		if counter_zombie_squads < max_zombie_spawn_count and #blood_moon_active_spawns < (max_zombie_spawn_count*(max_zombie_squad_size/3*2)) then
 			local smart = alife_object(smart_id)
 			if smart then
 				local squad = SIMBOARD:create_squad(smart, "blood_moon_zombies")
+			
 				if squad then
-					table.insert(blood_moon_active_spawns, {
-						mutant_id = squad.id,
-					})
-					add_squad_members(squad, max_zombie_squad_size)
+					add_squad_members(squad, max_zombie_squad_size, counter_zombies)
+					counter_zombie_squads = counter_zombie_squads + 1
 					if squad then
+						for member in squad:squad_members() do
+							table.insert(blood_moon_active_spawns, {
+							mutant_id = squad.id,
+							npc_id = member.id, 
+							})
+						end
 						squad.scripted_target = "actor"
 						squad.rush_to_target = true
 						pr("Hayzed squad spawned on smart [%s], targeting actor.", smart_id)  
@@ -530,15 +536,15 @@ end
 function server_entity_on_unregister(obj)
 	if blood_moon_active_spawns then
 		for idx, spawn in ipairs(blood_moon_active_spawns) do
-			if obj.id == spawn.mutant_id then
-				pr("Blood Moon: Removing squad_id: %s from table", spawn.mutant_id)
+			if obj.id == spawn.npc_id then
+				pr("Blood Moon: Removing npc_id: %s from table", spawn.npc_id)
 				table.remove(blood_moon_active_spawns, idx)
 			end
 		end
 	end
 end
 
-function add_squad_members(squad, max_squad_count)
+function add_squad_members(squad, max_squad_count, counter)
     local max_squad_count = math.random(1, max_squad_count)
 	local commander = alife_object(squad:commander_id())
 	if commander then
@@ -557,6 +563,7 @@ function add_squad_members(squad, max_squad_count)
 			local random_sec = random_spawn[math.random(1, #random_spawn)]
 
 			local new_member_id = squad:add_squad_member(random_sec, pos, lvid, gvid)
+			
 			local se_obj = new_member_id and alife_object(new_member_id)
 			if se_obj then
 				squad_smart:register_npc(se_obj)
@@ -572,24 +579,11 @@ end
 -- will release all remaining zombie squads when called. Must be called when blood moon ends. No zombie explosion yet. They just disappear.
 function release_all_blood_moon_zombies()
 	for i = #blood_moon_active_spawns, 1, -1 do
+		pr("Index = %s", i)
 		local spawn = blood_moon_active_spawns[i]
-		local squad = alife_object(spawn.mutant_id)
-		if squad and squad.commander_id then
-			for m in squad:squad_members() do
-				local npc = alife_object(m.id)
-				if npc then
-					npc:kill(npc)
-					safe_release_manager.release(npc)
-				end
-			end
-			for m in squad:squad_members() do
-				local npc = alife_object(m.id)
-				if npc then
-					npc:kill(npc)
-					safe_release_manager.release(npc)
-				end
-			end
-		end
+		local npc = get_object_by_id(spawn.npc_id)
+		pr("Zombie goes boom!")
+		explode_on_death.explode_npc(npc)
 	end
 	blood_moon_active_spawns = {}
 end
@@ -603,17 +597,13 @@ end
 function delete_zombies()
     for idx = #blood_moon_active_spawns, 1, -1 do
         local spawn = blood_moon_active_spawns[idx]
-        local squad = alife_object(spawn.mutant_id)
+        local se_npc= alife_object(spawn.npc_id)
 
-        if squad then
-            if squad.remove_squad and squad.get_script_target then                
-                alife_release(squad)
-                table.remove(blood_moon_active_spawns, idx)
-            else
-                pr("Warning: squad id %s is not a valid squad object", spawn.mutant_id)
-            end
+        if se_npc then
+            alife_release(se_npc)
+            table.remove(blood_moon_active_spawns, idx)
         else
-            pr("Warning: squad id %s does not exist", spawn.mutant_id)
+            pr("Warning: npc id %s does not exist", spawn.npc_id)
         end
     end
 end
@@ -625,6 +615,9 @@ function on_key_press(key)
 		local surge_start = math.floor(BloodMoonManager._delta - g_time:diffSec(last_blood_moon_time))
 		c = tostring(math.floor(surge_start/60))
 		news_manager.send_tip(db.actor, "Before blood moon - " .. c .. " minutes" , nil, "recent_surge", nil, nil)
+	end
+	if (key == DIK_keys.DIK_K) and (blood_moon_mcm.get_config("enable_debug")) then
+		news_manager.send_tip(db.actor, "Zombies alive - " .. tostring(#blood_moon_active_spawns), nil, "recent_surge", nil, nil)
 	end
 end
 
