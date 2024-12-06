@@ -25,9 +25,11 @@ function explode_npc(npc)
         body_tear_sound.volume = 1
     end
 
-    npc:kill(npc)
     npc_id = npc:id()
-    se_npc = alife_object(npc_id) 
+    se_npc = alife_object(npc_id)
+    if npc:alive() then
+        npc:kill(npc)
+    end
     safe_release_manager.release(se_npc) 
 end
 
