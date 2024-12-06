@@ -10,6 +10,7 @@ function get_blood_moon_manager()
 	return BloodMoonManager
 end
 ---------------------------------------------------------------------
+local map_exemptions = {"l03u_agr_underground", "fake_start",  "jupiter_underground", "l08u_brainlab", "l04u_labx18", "l10u_bunker", "labx8", "l12u_control_monolith", "l13u_warlab", "l12u_sarcofag", "l08u_brainlab"}
 
 local surge_time_factor = 10
 
@@ -76,8 +77,18 @@ function CBloodMoonManager:start(manual) --Starts the event (this function is ca
 	--local flags = {allow = true}
 	--SendScriptCallback("on_before_blood_moon",flags)
 		
-	if(diff_sec+6>self.blood_moon_duration) then
+	local level_name = level.name()
+	--pr("Level name = %s", level_name)
+	local level_flag = false
+	for _, name in ipairs(map_exemptions) do
+		if name == level_name then
+			level_flag = true
+		end
+	end
+	
+	if(diff_sec+6>self.blood_moon_duration) or level_flag then
 		self:skip_blood_moon()
+		level_flag = false
 	else
 		self.started = true
 		self.finished = false
@@ -610,8 +621,8 @@ end
 
 function on_key_press(key)
 	if (key == DIK_keys.DIK_M) and (blood_moon_mcm.get_config("enable_debug")) then
-		local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or game.get_game_time()
 		local g_time = game.get_game_time()
+		local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or g_time
 		local surge_start = math.floor(BloodMoonManager._delta - g_time:diffSec(last_blood_moon_time))
 		c = tostring(math.floor(surge_start/60))
 		news_manager.send_tip(db.actor, "Before blood moon - " .. c .. " minutes" , nil, "recent_surge", nil, nil)
