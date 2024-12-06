@@ -1,6 +1,13 @@
 local blood_moon_zombies = {
-    "hayzed_weak", "hayzed_normal", "hayzed_strong", "lady_weak", "lady_normal", "lady_strong", "skyrim_male", "skyrim_female"
+    "lady_weak", "lady_normal", "lady_strong", "skyrim_male", "skyrim_female"
 }
+
+local respawn_zombies = {
+    "hayzed_weak", "hayzed_normal", "hayzed_strong"
+}
+
+local exploding_zombies = {}
+
 
 function explode_npc(npc)
     if not npc then
@@ -29,19 +36,31 @@ end
 
 function explode_on_death(npc, who)
     if not IsMonster(npc) then return end
-
-    local function matches_section(section)
-        for _, value in ipairs(blood_moon_zombies) do
-            if section == value then
-                return true
-            end
+    if blood_moon_manager.is_loaded() then
+        for _, zombie_type in ipairs(blood_moon_zombies) do
+            table.insert(exploding_zombies, zombie_type)
         end
-        return false
-    end
-    if matches_section(npc:section()) then
-        explode_npc(npc)
-    end
+
+        if blood_moon_manager.is_started() then
+            for _, zombie_type in ipairs(respawn_zombies) do
+                table.insert(exploding_zombies, zombie_type)
+            end
+        elseif blood_moon_manager.is_finished() then
+            exploding_zombies = {}
+        end
     
+        local function matches_section(section)
+            for _, value in ipairs(exploding_zombies) do
+                if section == value then
+                    return true
+                end
+            end
+            return false
+        end
+        if matches_section(npc:section()) then
+            explode_npc(npc)
+        end
+    end    
 end
 
 -- Initialize the script on game start

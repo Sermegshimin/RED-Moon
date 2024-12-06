@@ -569,6 +569,55 @@ function add_squad_members(squad, max_squad_count)
 	end
 end
 
+-- will release all remaining zombie squads when called. Must be called when blood moon ends. No zombie explosion yet. They just disappear.
+function release_all_blood_moon_zombies()
+	for i = #blood_moon_active_spawns, 1, -1 do
+		local spawn = blood_moon_active_spawns[i]
+		local squad = alife_object(spawn.mutant_id)
+		if squad and squad.commander_id then
+			for m in squad:squad_members() do
+				local npc = alife_object(m.id)
+				if npc then
+					npc:kill(npc)
+					safe_release_manager.release(npc)
+				end
+			end
+			for m in squad:squad_members() do
+				local npc = alife_object(m.id)
+				if npc then
+					npc:kill(npc)
+					safe_release_manager.release(npc)
+				end
+			end
+		end
+	end
+	blood_moon_active_spawns = {}
+end
+
+function on_before_level_changing()
+	delete_zombies()
+	pr("Level is changing, wiping ReSpawn Mutants")
+end
+
+
+function delete_zombies()
+    for idx = #blood_moon_active_spawns, 1, -1 do
+        local spawn = blood_moon_active_spawns[idx]
+        local squad = alife_object(spawn.mutant_id)
+
+        if squad then
+            if squad.remove_squad and squad.get_script_target then                
+                alife_release(squad)
+                table.remove(blood_moon_active_spawns, idx)
+            else
+                pr("Warning: squad id %s is not a valid squad object", spawn.mutant_id)
+            end
+        else
+            pr("Warning: squad id %s does not exist", spawn.mutant_id)
+        end
+    end
+end
+
 function on_key_press(key)
 	if (key == DIK_keys.DIK_M) and (blood_moon_mcm.get_config("enable_debug")) then
 		local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or game.get_game_time()
@@ -586,5 +635,6 @@ end
 function on_game_start()
 	RegisterScriptCallback("actor_on_first_update", actor_on_first_update)
 	RegisterScriptCallback("server_entity_on_unregister", server_entity_on_unregister)
+	RegisterScriptCallback("on_before_level_changing", on_before_level_changing)
 	RegisterScriptCallback("on_key_press", on_key_press)
 end
