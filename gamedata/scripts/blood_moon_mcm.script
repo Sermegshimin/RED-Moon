@@ -24,7 +24,7 @@ function get_config(key)
 end
 
 op = { id= "blood_moon",sh=true ,gr={
-		{ id= "slide_blood_moon"			,type= "slide"	  ,link= "blood_moon_banner"	 ,text= "ui_mcm_title_blood_moon"		,size= {512,50}		,spacing= 20 },
+		{ id= "slide_blood_moon"			,type= "slide"	  ,link= "red_moon_main_mcm_banner"	 ,text= ""		,spacing= 20 },
 		{ id= "state"    	 	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "frequency"    	,type= "list"     ,val= 2	,def= 24	             ,content= {{1, "every_day"} , {2,"every_2d"}, {3,"every_3d"} , {4,"every_4d"} , {5,"every_5d"} }  },
 		{ id= "safe_radius"		,type= "list"	  ,val= 2	,def= 60 	 	 ,content= {{30}, {40}, {50}, {60}}	,no_str= true  },
