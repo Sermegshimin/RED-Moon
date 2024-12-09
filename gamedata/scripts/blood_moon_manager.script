@@ -510,6 +510,12 @@ function get_sorted_smart_ids()
 	return result
 end
 
+function read_ltx_section(filename,section,field)
+	local ini = ini_file(filename)
+	local value = ini and ini:r_string_ex(section,field) or "nil"
+    return value
+end
+
 function spawn_zombies_on_nearest_smarts()
 	local nearest_smarts = get_sorted_smart_ids()
   
@@ -525,7 +531,12 @@ function spawn_zombies_on_nearest_smarts()
 				local squad = SIMBOARD:create_squad(smart, "blood_moon_zombies")
 			
 				if squad then
-					add_squad_members(squad, max_zombie_squad_size, counter_zombies)
+					local squad_size_by_level = tonumber(read_ltx_section("plugins\\blood_moon_configs.ltx", "squad_size_by_level", level.name()))
+					local new_squad_size = nil
+					if max_zombie_squad_size > squad_size_by_level then
+						new_squad_size = squad_size_by_level
+					end
+					add_squad_members(squad, new_squad_size)
 					counter_zombie_squads = counter_zombie_squads + 1
 					if squad then
 						for member in squad:squad_members() do
@@ -555,7 +566,7 @@ function server_entity_on_unregister(obj)
 	end
 end
 
-function add_squad_members(squad, max_squad_count, counter)
+function add_squad_members(squad, max_squad_count)
     local max_squad_count = math.random(1, max_squad_count)
 	local commander = alife_object(squad:commander_id())
 	if commander then
