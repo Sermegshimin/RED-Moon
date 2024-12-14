@@ -1,0 +1,32 @@
+local CMD = debug_cmd_list.command_get_list()
+
+function CMD.crawling_mist(me,txt,owner,p)
+	local wrd = debug_cmd_list.check_and_set_help(me,txt,owner,"[start|stop]")
+	if not (wrd) then return end
+
+	local sm = crawling_mist_manager and crawling_mist_manager.CMistManager
+	if not (sm) then return "No crawling mist manager!" end
+
+	if (wrd == "start") then
+		sm:start(true)
+		return "crawling_mist:= started"
+	elseif (wrd == "stop") then
+		sm:finish(true)
+		return "crawling_mist:= ended"
+	else
+		return "crawling_mist:= wrong argument passed."
+	end
+end 
+
+function CMD.crawling_mist(_,txt,x)
+	if (txt == "start") and (crawling_mist_manager.is_finished()) then
+		crawling_mist_manager.start_cmist()
+		x:SendOutput('Crawling mist has started')
+	elseif (txt == "stop") and (crawling_mist_manager.is_started()) then
+		crawling_mist_manager.stop_cmist()
+		x:SendOutput('Crawling mist has stopped')
+	end
+end
+
+ui_debug_launcher.inject("action", { name = "Start a crawling mist" , cmd = "crawling_mist start", hide_ui = 2})
+ui_debug_launcher.inject("action", { name = "Stop a crawling mist" , cmd = "crawling_mist stop", hide_ui = 2})

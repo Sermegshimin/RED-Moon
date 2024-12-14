@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_menu_blood_moon">
+		<text>RE:D Moon</text>
+	</string>
+	<string id="ui_mcm_title_blood_moon">
+		<text>Blood moon</text>
+	</string>
+
+	<string id="ui_mcm_blood_moon_state">
+		<text>Enable Blood moon</text>
+	</string>
+
+	<string id="ui_mcm_blood_moon_frequency">
+		<text>Blood moon frequency</text>
+	</string>
+	<string id="ui_mcm_lst_every_day">
+		<text>Every 1-2 days</text>
+	</string>
+
+	<string id="ui_mcm_lst_every_2d">
+		<text>Every 2-3 days</text>
+	</string>
+
+	<string id="ui_mcm_lst_every_3d">
+		<text>Every 2-4 days</text>
+	</string>
+	<string id="ui_mcm_lst_every_4d">
+		<text>Every 3-5 days</text>
+	</string>
+
+	<string id="ui_mcm_lst_every_5d">
+		<text>Every 3-6 days</text>
+	</string>
+	
+	<string id="ui_mcm_blood_moon_max_zombie_spawn_radius">
+		<text>Maximal distance zombies will spawn at</text>
+	</string>
+	
+	<string id="ui_mcm_blood_moon_max_zombie_spawn_count">
+		<text>Maximum zombie spawn count</text>
+	</string>
+	
+	<string id="ui_mcm_blood_moon_max_zombie_squad_size">
+		<text>Zombie squad size</text>
+	</string>
+	
+	<string id="ui_mcm_blood_moon_enable_debug">
+		<text>Debug mode</text>
+	</string>
+	<string id="ui_mcm_blood_moon_news_during_event">
+		<text>Receive messages during the event</text>
+	</string>
+	<string id="ui_mcm_blood_moon_news_after_event">
+		<text>Receive messages with reactions to the event</text>
+	</string>
+	<string id="ui_mcm_blood_moon_news_before_event">
+		<text>Receive messages that predict the event</text>
+	</string>
+	<string id="ui_mcm_blood_moon_safe_radius">
+		<text>Safe radius</text>
+	</string>
+	<string id="ui_mcm_blood_moon_number_of_spawning_smarts">
+		<text>Quantity of smarts zombies will spawn at</text>
+	</string>
+	<string id="ui_mcm_blood_moon_sleepless_blood_moon">
+		<text>Sleeping during the event</text>
+	</string>
+
+</string_table>

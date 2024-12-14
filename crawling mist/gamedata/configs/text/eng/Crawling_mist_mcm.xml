@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_menu_crawnling_mist">
+		<text>RE:D Moon</text>
+	</string>
+	<string id="ui_mcm_title_crawnling_mist">
+		<text>Blood moon</text>
+	</string>
+
+	<string id="ui_mcm_crawnling_mist_state">
+		<text>Enable Blood moon</text>
+	</string>
+
+	<string id="ui_mcm_crawnling_mist_frequency">
+		<text>Blood moon frequency</text>
+	</string>
+	<string id="ui_mcm_lst_every_day">
+		<text>Every 1-2 days</text>
+	</string>
+
+	<string id="ui_mcm_lst_every_2d">
+		<text>Every 2-3 days</text>
+	</string>
+
+	<string id="ui_mcm_lst_every_3d">
+		<text>Every 2-4 days</text>
+	</string>
+	<string id="ui_mcm_lst_every_4d">
+		<text>Every 3-5 days</text>
+	</string>
+
+	<string id="ui_mcm_lst_every_5d">
+		<text>Every 3-6 days</text>
+	</string>
+	
+	<string id="ui_mcm_crawnling_mist_max_spider_spawn_radius">
+		<text>Maximal distance zombies will spawn at</text>
+	</string>
+	
+	<string id="ui_mcm_crawnling_mist_max_spider_spawn_count">
+		<text>Maximum zombie spawn count</text>
+	</string>
+	
+	<string id="ui_mcm_crawnling_mist_max_spider_squad_size">
+		<text>Zombie squad size</text>
+	</string>
+	
+	<string id="ui_mcm_crawnling_mist_enable_debug">
+		<text>Debug mode</text>
+	</string>
+	<string id="ui_mcm_crawnling_mist_news_during_event">
+		<text>Receive messages during the event</text>
+	</string>
+	<string id="ui_mcm_crawnling_mist_news_after_event">
+		<text>Receive messages with reactions to the event</text>
+	</string>
+	<string id="ui_mcm_crawnling_mist_news_before_event">
+		<text>Receive messages that predict the event</text>
+	</string>
+	<string id="ui_mcm_crawnling_mist_safe_radius">
+		<text>Safe radius</text>
+	</string>
+	<string id="ui_mcm_crawnling_mist_number_of_spawning_smarts">
+		<text>Quantity of smarts zombies will spawn at</text>
+	</string>
+	<string id="ui_mcm_crawnling_mist_sleepless_crawnling_mist">
+		<text>Sleeping during the event</text>
+	</string>
+
+</string_table>

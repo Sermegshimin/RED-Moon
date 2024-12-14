@@ -1,0 +1,32 @@
+local CMD = debug_cmd_list.command_get_list()
+
+function CMD.blood_moon(me,txt,owner,p)
+	local wrd = debug_cmd_list.check_and_set_help(me,txt,owner,"[start|stop]")
+	if not (wrd) then return end
+
+	local sm = blood_moon_manager and blood_moon_manager.BloodMoonManager
+	if not (sm) then return "No blood_moon manager!" end
+
+	if (wrd == "start") then
+		sm:start(true)
+		return "blood_moon:= started"
+	elseif (wrd == "stop") then
+		sm:finish(true)
+		return "blood_moon:= ended"
+	else
+		return "blood_moon:= wrong argument passed."
+	end
+end 
+
+function CMD.blood_moon(_,txt,x)
+	if (txt == "start") and (blood_moon_manager.is_finished()) then
+		blood_moon_manager.start_blood_moon()
+		x:SendOutput('Blood moon has started')
+	elseif (txt == "stop") and (blood_moon_manager.is_started()) then
+		blood_moon_manager.stop_blood_moon()
+		x:SendOutput('Blood moon has stopped')
+	end
+end
+
+ui_debug_launcher.inject("action", { name = "Start a blood moon" , cmd = "blood_moon start", hide_ui = 2})
+ui_debug_launcher.inject("action", { name = "Stop a blood moon" , cmd = "blood_moon stop", hide_ui = 2})

@@ -1,0 +1,44 @@
+local defaults = {
+    ["state"] = 1,
+    ["frequency"] = 3,
+	["safe_radius"] = 60,
+	["max_spider_spawn_count"] = 12,
+	["max_spider_squad_size"] = 9,
+	["number_of_spawning_smarts"] = 3,
+	["max_spider_spawn_radius"] = 200,
+	["enable_debug"] = 0,
+	["news_during_event"] = 1,
+	["news_after_event"] = 1,
+	["news_before_event"] = 1,
+	["sleepless_crawling_mist"] = 1,
+
+}
+
+-- Define the get_config function
+function get_config(key)
+    if ui_mcm then
+        return ui_mcm.get("crawling_mist/"..key)
+    else
+        return defaults[key]
+    end
+end
+
+op = { id= "crawling_mist",sh=true ,gr={
+		{ id= "slide_crawling_mist"			,type= "slide"	  ,link= "crawling_mist_main_mcm_banner"	 ,text= ""		,spacing= 20 },
+		{ id= "state"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "frequency"    	,type= "list"     ,val= 2	,def= 1	             ,content= {{1, "every_day"} , {2,"every_2d"}, {3,"every_3d"} , {4,"every_4d"} , {5,"every_5d"} }  },
+		{ id= "safe_radius"		,type= "list"	  ,val= 2	,def= 60 	 	 ,content= {{30}, {40}, {50}, {60}}	,no_str= true  },
+		{ id= "max_spider_spawn_count" 		,type= "list"	  ,val= 2	,def= 12		 ,content= {{6} , {9} , {12} , {15} , {18}}	,no_str= true  },
+		{ id= "max_spider_squad_size"		,type= "list"	  ,val= 2	,def= 9			 ,content= {{3} , {6} , {9} , {12} , {15}}	,no_str= true  },
+		{ id= "max_spider_spawn_radius"		,type= "list"	  ,val= 2	,def= 200		 ,content= {{150} , {160} , {170} , {180} , {190}, {200}}	,no_str= true  },
+		{ id= "number_of_spawning_smarts"	,type= "list"	  ,val= 2	,def= 3			 ,content= {{1} , {2} , {3} , {4} , {5}}	,no_str= true  },
+		{ id= "news_before_event"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "news_during_event"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "news_after_event"    	 	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "sleepless_crawling_mist"    	,type= "check"    ,val= 1	,def= true	   },
+		{ id= "enable_debug"    	 	,type= "check"    ,val= 1	,def= false	   },
+      }
+    }
+function on_mcm_load()
+	return op
+end

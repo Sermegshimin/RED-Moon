@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	Dynamic news crawnling mist
+-->
+<string_table>
+
+	<string id="st_dyn_news_crawnling_mist">
+		<text>crawnling mist</text>
+	</string>
+	<string id="st_blood_moon_while_asleep">
+		<text>A crawnling mist occured</text>
+	</string>
+	
+<!-- 
+	Response fake - death by crawnling mist
+-->	
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_1">
+		<text>Damn... One more endedup as feeding those little nightmares.</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_2">
+		<text>Everybody's heading there sooner or later.</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_3">
+		<text>You'll be remembered...</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_4">
+		<text>Rest in peace.</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_5">
+		<text>Lost to the Zone...</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_6">
+		<text>Let's have a drink in their memory!</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_7">
+		<text>Poor guys...</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_8">
+		<text>Should've been more careful. Too late now.</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_9">
+		<text>You never get used to this after every crawling mist.</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_10">
+		<text>People keep getting caught in those monsters, many just don't make it.</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_11">
+		<text>They didn't make it in time, poor guys...</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_12">
+		<text>That's why you should be fast and aware people.</text>
+	</string>
+	<string id="st_dyn_news_res_fake_death_crawnling_mist_13">
+		<text>Tip of the day: mark some safe spots in every area. You never know when a crawling mist is gonna hit.</text>
+	</string>
+	
+<!-- 
+Random news
+-->
+
+<!-- 
+Post-crawnling mist
+-->	
+
+	<string id="st_dyn_news_crawnling_mist_after_1">
+		<text>Today I have managed to get through a literal hell on earth!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_2">
+		<text>We did it guys, we survived the crawling mist!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_3">
+		<text>That was rough... are you okay, guys?!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_4">
+		<text>Is everybody still alive?!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_5">
+		<text>I made it out alive. Hopefully, my luck doesn't end here</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_6">
+		<text>This crawling mist lasted forever!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_7">
+		<text>It's finally over. I can't look at those spiders anymore!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_8">
+		<text>Shit, I have wasted all my bullets! I am glad it is over.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_9">
+		<text>...oh man... those things ...</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_after_10">
+		<text>All right, people. It's safe now.</text>
+	</string>
+
+<!-- 
+During blood moon
+-->	
+
+	<string id="st_dyn_news_crawnling_mist_during_1">
+		<text>Watch out! The spiders are coming!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_2">
+		<text>Shoot them! Shoot them all!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_3">
+		<text>Keep distance! Don't let the spiders come closer!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_4">
+		<text>No! Don't touch me! Don't touch me!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_5">
+		<text>Aaaaaaarh! They are everywhere! What do I do?!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_6">
+		<text>Come here, bastards! I will make some cheese out of you!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_7">
+		<text>Guys, I am running out of bullets. Is it the end?</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_8">
+		<text>We don't have time to relax! Even more spiders are coming this way!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_9">
+		<text>Damn! I can't endure it anymore!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_10">
+		<text>These spiders are so squichy! The quantity, though...</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_11">
+		<text>I am cornered, but I won't give up!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_12">
+		<text>It is life and death game of tag. Let's see who ends up on top!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_13">
+		<text>I just can't die here! Not today!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_14">
+		<text>Watch your six! Another crowd is approaching from the back!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_15">
+		<text>Stick together, guys! Teamwork is the key to surviving!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_16">
+		<text>Hell no! I am not going there!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_17">
+		<text>It is time to test my new gun!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_18">
+		<text>It is over! It is the end for us!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_19">
+		<text>I knew it! There's no such thing as a free lunch. This is the price I have to pay.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_during_20">
+		<text>Emissions, psi-storms and now this?! I am out.</text>
+	</string>
+	
+<!-- 
+Blood moon template
+-->
+
+	<string id="st_dyn_news_crawnling_mist_template_1">
+		<text>Expect some havoc, a $what $when.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_2">
+		<text>Expect yourselves a cataclysm, a $what will show $when.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_3">
+		<text>A $what is coming $when. Check your bullets! you will need a lot soon!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_4">
+		<text>Guys, my equipment has already started to go nuts. Most likely signs of a $what $when.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_5">
+		<text>Hermann is telling us that a $what is happening $when, so find yourselves some cover.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_6">
+		<text>Hey, a $what is gonna be here $when. Stay sharp.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_7">
+		<text>While Forester was upgrading my gear, he gave a warning. Says that a $what is happening $when, so stay sharp, spiders are coming!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_8">
+		<text>I visited the Ecologists at Yantar and, according to their measurements, a $what will show $when.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_9">
+		<text>I've been told that a $what will be on its way $when. My sources are reliable, so it's probably no joke. Be careful out there.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_10">
+		<text>Sakharov says that his equipment detects a $what that'll be here $when.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_11">
+		<text>Sakharov warned that a $what might commence $when.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_12">
+		<text>Watch out! A $what well be there soon!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_13">
+		<text>Things are going to hell, another $what $when.</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_template_14">
+		<text>Prepare for the worst... Expect a $what $when.</text>
+	</string>
+	
+<!-- 
+Blood moon builder by faction
+-->
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_1">
+		<text>Commander's warning us,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_2">
+		<text>Heard from the scientists that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_3">
+		<text>HQ's reported that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_4">
+		<text>Machines are giving off some disturbing info,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_5">
+		<text>Sensors indicate that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_6">
+		<text>The commander just reported that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_7">
+		<text>The platoon commander has reported that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_8">
+		<text>Be advised,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_army_9">
+		<text>All units,</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_bandit_1">
+		<text>Got info from the Garbage,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_bandit_2">
+		<text>Heard some shit from the Bar,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_bandit_3">
+		<text>One of our guys talked about</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_bandit_4">
+		<text>Our bros from the north are saying</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_bandit_5">
+		<text>Our fellas in Jupiter mentioned that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_bandit_6">
+		<text>Overheard some chit-chat at the Bar...</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_bandit_7">
+		<text>Sultan said</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_renegade_1">
+		<text>Got info from the Garbage,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_renegade_2">
+		<text>Heard some shit from the Bar,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_renegade_3">
+		<text>One of our guys talked about</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_renegade_4">
+		<text>Our bros from the north are saying</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_renegade_5">
+		<text>Our fellas in Meadow mentioned that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_renegade_6">
+		<text>Overheard some chit-chat at the Meadow...</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_renegade_7">
+		<text>Yoga said</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_isg_1">
+		<text>Boys, don't screw about</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_isg_2">
+		<text>Got an important message,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_isg_3">
+		<text>Got some info,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_isg_4">
+		<text>Heard from the boss that,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_isg_5">
+		<text>Intercepted some scientist messages,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_isg_6">
+		<text>Sources say that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_isg_7">
+		<text>The boss mentioned</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_csky_1">
+		<text>Attention! Our sensors have picked up critical information,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_csky_2">
+		<text>Important information from our main base,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_csky_3">
+		<text>Information has arrived from the Swamp,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_csky_4">
+		<text>Our readings have gone wild,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_csky_5">
+		<text>Readings on our devices are alarming...</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_csky_6">
+		<text>Sensors read that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_csky_7">
+		<text>To all stalkers, attention! According to our devices,</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_dolg_1">
+		<text>Important information from Petrenko,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_dolg_2">
+		<text>One of our squads has returned from the CNPP with some important intel,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_dolg_3">
+		<text>Picked up information from the CNPP,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_dolg_4">
+		<text>Readings are off the charts... Heads up,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_dolg_5">
+		<text>Received important information from the scientists,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_dolg_6">
+		<text>Received information from HQ,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_dolg_7">
+		<text>Received information from the Cordon,</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_ecolog_1">
+		<text>Attention! Our sensors have picked up important information,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_ecolog_2">
+		<text>Attention to all stalkers,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_ecolog_3">
+		<text>Important information from Sakharov, who claims that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_ecolog_4">
+		<text>Information has arrived from Yantar,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_ecolog_5">
+		<text>Our readings have gone wild,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_ecolog_6">
+		<text>Readings on our devices are alarming,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_ecolog_7">
+		<text>Sensors read that</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_freedom_1">
+		<text>Doc stopped by... There's gonna be trouble,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_freedom_2">
+		<text>Got word from the Army Warehouses,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_freedom_3">
+		<text>Gotten info from reliable sources,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_freedom_4">
+		<text>Lukash's just sent a message</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_freedom_5">
+		<text>Our dudes got some news,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_freedom_6">
+		<text>Overheard the Dutyers,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_freedom_7">
+		<text>The Swamp Doctor said that</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_killer_1">
+		<text>Boys, don't screw about</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_killer_2">
+		<text>Got an important message,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_killer_3">
+		<text>Got some info,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_killer_4">
+		<text>Heard from the boss that,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_killer_5">
+		<text>Intercepted some scientist messages,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_killer_6">
+		<text>Sources say that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_killer_7">
+		<text>The boss mentioned</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_monolith_1">
+		<text>The C-Consciousness has given the signal,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_monolith_2">
+		<text>The Monolith has decided...</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_monolith_3">
+		<text>The Monolith has spoken,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_monolith_4">
+		<text>The scientists of the C-Consciousness have spoken,</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_start_stalker_1">
+		<text>Forester just gave some info,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_stalker_2">
+		<text>Got word from a few scouts that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_stalker_3">
+		<text>Got word from the scientists in Jupiter that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_stalker_4">
+		<text>Heard at the Bar that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_stalker_5">
+		<text>Sakharov gave some intel,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_stalker_6">
+		<text>Sidorovich mentioned that</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_stalker_7">
+		<text>The Swamp Doctor mentioned that</text>
+	</string>
+	
+	<string id="st_dyn_news_crawnling_mist_builder_start_greh_1">
+		<text>The Masters have given the signal,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_greh_2">
+		<text>The Monolith has decided...</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_greh_3">
+		<text>The Monolith has spoken,</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_start_greh_4">
+		<text>As Chernobog predicted,</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_mid_1">
+		<text>a $what is expected $when</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_mid_2">
+		<text>a $what is coming $when</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_mid_3">
+		<text>a $what should arrive $when</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_mid_4">
+		<text>a $what is about to happen $when</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_mid_5">
+		<text>a $what is gonna be here $when</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_mid_6">
+		<text>a $what is happening $when</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_bandit_1">
+		<text>Expecting a fucked-up time</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_bandit_2">
+		<text>Seems like we got a bad deal</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_bandit_3">
+		<text>Hide the vodka, check your bullets!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_bandit_4">
+		<text>Better stick your ass around</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_bandit_5">
+		<text>They are coming</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_renegade_1">
+		<text>Expecting a fucked-up time</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_renegade_2">
+		<text>Seems like we got a bad deal</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_renegade_3">
+		<text>Hide the vodka, check your bullets!</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_renegade_4">
+		<text>Better stick your ass around</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_renegade_5">
+		<text>They are coming!</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_isg_1">
+		<text>It's gonna get ugly</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_isg_2">
+		<text>You better stay close to your hideouts</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_isg_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_isg_4">
+		<text>You've been warned</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_army_1">
+		<text>Check on your supplies, teams</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_army_2">
+		<text>Keep your personnel sheltered</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_army_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_army_4">
+		<text>Follow the safety procedures</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_dolg_1">
+		<text>Check on your supplies, teams</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_dolg_2">
+		<text>Keep your personnel sheltered</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_dolg_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_dolg_4">
+		<text>Follow the safety procedures</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_csky_1">
+		<text>Check on your supplies, teams</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_csky_2">
+		<text>Keep your personnel sheltered</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_csky_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_csky_4">
+		<text>Follow the safety procedures</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_ecolog_1">
+		<text>Check on your supplies, teams</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_ecolog_2">
+		<text>Keep your personnel sheltered</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_ecolog_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_ecolog_4">
+		<text>Follow the safety procedures</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_killer_1">
+		<text>It's gonna get ugly</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_killer_2">
+		<text>You better stay close to your hideouts</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_killer_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_killer_4">
+		<text>You've been warned</text>
+	</string>
+
+	<string id="st_dyn_newscrawnling_mist_builder_end_freedom_1">
+		<text>It's gonna get ugly</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_freedom_2">
+		<text>You better stay close to your hideouts</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_freedom_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_freedom_4">
+		<text>You've been warned</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_stalker_1">
+		<text>It's gonna get ugly</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_stalker_2">
+		<text>You better stay close to your hideouts</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_stalker_3">
+		<text>Stay safe</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_stalker_4">
+		<text>You've been warned</text>
+	</string>
+
+	<string id="st_dyn_news_crawnling_mist_builder_end_monolith_1">
+		<text>It shall slay our enemies</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_monolith_2">
+		<text>May this event be purified by the will of the Monolith</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_monolith_3">
+		<text>The will of the Monolith shall cleanse the Zone</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_monolith_4">
+		<text>Remain prepared until then, brothers</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_monolith_5">
+		<text>The infidels will be purified</text>
+	</string>
+	
+	<string id="st_dyn_news_crawnling_mist_builder_end_greh_1">
+		<text>It shall slay our enemies</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_greh_2">
+		<text>May the world be purified by the will of the Monolith</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_greh_3">
+		<text>The will of the Monolith shall cleanse the whole world</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_greh_4">
+		<text>We are inching ever closer toward our goal</text>
+	</string>
+	<string id="st_dyn_news_crawnling_mist_builder_end_greh_5">
+		<text>The infidels will be purified</text>
+	</string>
+
+<!-- 
+Extra
+-->
+	
+<!--
+Special
+-->
+
+	<string id="st_dyn_news_death_by_crawnling_mist_start">
+		<text>Preliminary report: Identified crawling mist casualties:\n</text>
+	</string>
+	<string id="st_dyn_news_death_by_crawnling_mist_end">
+		<text>Awaiting identification: $num</text>
+	</string>	
+	
+</string_table>

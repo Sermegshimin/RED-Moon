@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<string_table>
+
+
+	<string id="st_sleep_crawnling_mist">
+		<text>You will die if you sleep now.</text>
+	</string>
+	
+
+</string_table>
