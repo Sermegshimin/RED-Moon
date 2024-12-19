@@ -108,7 +108,7 @@ function CBloodMoonManager:new_blood_moon_time() --Defines when the next blood m
 	Y, M, D, h, m, s, ms = self.last_blood_moon_time:get(Y, M, D, h, m, s, ms)
 	local first_time_hours = 24 - h
 	local freq = blood_moon_mcm.get_config("frequency")
-	self._delta = math.random(math.floor(freq/2), freq)*3600*24 + first_time_hours*3600 - 40*60 --40 min == duaration of the event
+	self._delta = math.random(math.floor(freq/2), freq)*3600*24 + first_time_hours*3600 - 45*60 --45 min == duration of the event
 
 end
 
@@ -184,13 +184,13 @@ function CBloodMoonManager:update() --this function is called a lot of times con
 	
 	if not (self.started) then
         local g_time = game.get_game_time()
-        if(self.time_forwarded) then
+        --[[if(self.time_forwarded) then
             local diff = math.abs(self._delta - g_time:diffSec(self.last_blood_moon_time))
             if(diff < 3600) then
                 self._delta = 3 * 3600 + g_time:diffSec(self.last_blood_moon_time)
             end
             self.time_forwarded = false
-        end
+        end--]]
         if(g_time:diffSec(self.last_blood_moon_time) < self._delta) then
             return
         end

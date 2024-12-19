@@ -84,9 +84,18 @@ local function actor_on_sleep(hours)
 	get_surge_manager().time_forwarded = true
 	psi_storm_manager.get_psi_storm_manager().time_forwarded = true
 	
+	if (blood_moon_manager and blood_moon_manager.is_started() and level_weathers.get_weather_manager().weather_fx) then
+		level.stop_weather_fx()
+	end
+	
+	if (crawling_mist_manager_manager and crawling_mist_manager.is_started() and level_weathers.get_weather_manager().weather_fx) then
+		level.stop_weather_fx()
+	end
+
 	if(is_started() and level_weathers.get_weather_manager().weather_fx) then
 		level.stop_weather_fx()
 	end
+
 	level_weathers.get_weather_manager():forced_weather_change()
 end
 
