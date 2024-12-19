@@ -49,7 +49,8 @@ function CBloodMoonManager:initialize() --Initializes some important variables
 		local first_time_hours = 24 - h
 
 		local freq = blood_moon_mcm.get_config("frequency")
-		self._delta = math.random(math.floor(freq/2), freq)*3600*24 + first_time_hours*3600
+		local random_days = math.random(math.floor(freq/2), freq) + math.random() -- Add a random fraction of a day
+		self._delta = random_days * 86400 + first_time_hours * 3600 - 2400  -- 86400 seconds in a day
 
 	end
 	
@@ -108,7 +109,8 @@ function CBloodMoonManager:new_blood_moon_time() --Defines when the next blood m
 	Y, M, D, h, m, s, ms = self.last_blood_moon_time:get(Y, M, D, h, m, s, ms)
 	local first_time_hours = 24 - h
 	local freq = blood_moon_mcm.get_config("frequency")
-	self._delta = math.random(math.floor(freq/2), freq)*3600*24 + first_time_hours*3600 - 40*60 --40 min == duaration of the event
+	local random_days = math.random(math.floor(freq/2), freq) + math.random() -- Add a random fraction of a day
+	self._delta = random_days * 86400 + first_time_hours * 3600 - 2400  -- 86400 seconds in a day
 
 end
 
@@ -633,13 +635,29 @@ function delete_zombies()
 end
 
 function on_key_press(key)
-	if (key == DIK_keys.DIK_M) and (blood_moon_mcm.get_config("enable_debug")) then
-		local g_time = game.get_game_time()
-		local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or g_time
-		local surge_start = math.floor(BloodMoonManager._delta - g_time:diffSec(last_blood_moon_time))
-		c = tostring(math.floor(surge_start/60))
-		news_manager.send_tip(db.actor, "Before blood moon - " .. c .. " minutes" , nil, "recent_surge", nil, nil)
-	end
+    if (key == DIK_keys.DIK_M) and (blood_moon_mcm.get_config("enable_debug")) then
+        local g_time = game.get_game_time()
+        local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or g_time
+        local time_since_last = g_time:diffSec(last_blood_moon_time)
+        local time_until_next = math.max(0, BloodMoonManager._delta - time_since_last)
+
+        local days = math.floor(time_until_next / 86400)
+        local remaining_seconds = time_until_next % 86400
+        local hours = math.floor(remaining_seconds / 3600)
+        remaining_seconds = remaining_seconds % 3600
+        local minutes = math.floor(remaining_seconds / 60)
+
+        local display_string = ""
+        if days > 0 then
+            display_string = display_string .. days .. " day" .. (days > 1 and "s " or " ")
+        end
+        if hours > 0 then
+            display_string = display_string .. hours .. " hour" .. (hours > 1 and "s " or " ")
+        end
+        display_string = display_string .. minutes .. " minute" .. (minutes > 1 and "s" or "")
+
+        news_manager.send_tip(db.actor, "Before blood moon - " .. display_string, nil, "recent_surge", nil, nil)
+    end
 	if (key == DIK_keys.DIK_K) and (blood_moon_mcm.get_config("enable_debug")) then
 		news_manager.send_tip(db.actor, "Zombies alive - " .. tostring(#blood_moon_active_spawns), nil, "recent_surge", nil, nil)
 	end
