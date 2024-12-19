@@ -1,9 +1,10 @@
-# RE:D Moon [Pre-release state]
-An interesting addon for STALKER Anomaly that adds a new fun event to the game in addition to the psi-storms and emissions
+# RE:D Moon 
+An interesting addon for STALKER Anomaly that adds a two fun events to the game in addition to the psi-storms and emissions
+
+![alt text](https://github.com/Sermegshimin/RED-Moon/blob/master/red%20moon.png)
 
 ## Features
-- Naturally occuring event
-- New mutants to make you tremble in fear during blood moon
+- Naturally occuring events: blood moon and crawling mist
+- New mutants to make you tremble in fear during them 
 - MCM support
 - Dynamic news about the event
-- A new boss (possible in the future updates)
