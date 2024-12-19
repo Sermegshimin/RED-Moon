@@ -109,16 +109,8 @@ function CBloodMoonManager:new_blood_moon_time() --Defines when the next blood m
 	Y, M, D, h, m, s, ms = self.last_blood_moon_time:get(Y, M, D, h, m, s, ms)
 	local first_time_hours = 24 - h
 	local freq = blood_moon_mcm.get_config("frequency")
-<<<<<<< HEAD
-<<<<<<< HEAD
-	self._delta = math.random(math.floor(freq/2), freq)*3600*24 + first_time_hours*3600 - 45*60 --45 min == duration of the event
-=======
 	local random_days = math.random(math.floor(freq/2), freq) + math.random() -- Add a random fraction of a day
 	self._delta = random_days * 86400 + first_time_hours * 3600 - 2400  -- 86400 seconds in a day
->>>>>>> 3bf5e99d133d035aa4d7f4f52a9ab94746164145
-=======
-	self._delta = math.random(math.floor(freq/2), freq)*3600*24 + first_time_hours*3600 - 40*60 --40 min == duaration of the event
->>>>>>> parent of 48a0b0a (Cool)
 
 end
 
