@@ -1,0 +1,102 @@
+GOB = bind_monster.generic_object_binder
+
+ GOB.update = function(self, delta)
+	object_binder.update(self, delta)
+	
+	-- Start [Alundaio]
+	SendScriptCallback("monster_on_update",self.object,self.st)
+	-- End [Alundaio]
+	
+	-- Faustle
+	if not (self.object:alive()) then
+		local looted = se_load_var(self.object:id(),self.object:name(),"looted")
+		if (not looted) then
+			if (item_knife.is_equipped()) then
+				if (item_knife.get_condition() < 0.15) then
+					self.object:set_callback(callback.use_object, nil)
+					self.object:set_tip_text(game.translate_string("st_body_knife_bad"))
+					return
+				end
+
+				if (not item_knife.can_loot(self.object:section())) then
+					self.object:set_callback(callback.use_object, nil)
+					self.object:set_tip_text(game.translate_string("st_body_knife_weak"))
+				else
+					self.object:set_callback(callback.use_object, self.use_callback, self)
+					self.object:set_tip_text(game.translate_string("st_body_loot"))
+				end
+			else
+				self.object:set_callback(callback.use_object, nil)
+				self.object:set_tip_text(game.translate_string("st_body_knife_needed"))
+				return
+			end
+		else
+			self.object:set_callback(callback.use_object, nil)
+			self.object:set_tip_text("")
+		end
+		return
+	end
+	--
+	
+	local id = self.object:id()
+	local sim = alife()
+	local se_obj = sim:object(id)
+	if not (se_obj) then 
+		return 
+	end 
+	
+	local cls = self.object:clsid()
+	local sec = self.object:section()
+	if (cls == clsid.tushkano_s or cls == clsid.rat_s or sec == "vebber_weak" or sec == "vebber_strong" or sec == "vebber_normal") then
+		self.object:set_callback(callback.use_object, self.use_kick, self)
+		self.object:set_tip_text(self.object:set_tip_text(game.translate_string("st_body_kick")))
+	end
+
+	if self.st ~= nil and self.st.active_scheme ~= nil then
+		xr_logic.try_switch_to_another_section(self.object, self.st[self.st.active_scheme], db.actor)
+	end
+	
+	local squad = se_obj.group_id and se_obj.group_id ~= 65535 and sim:object(se_obj.group_id)
+	if (squad and squad:commander_id() == self.object:id()) then
+		squad:update()
+	end
+
+	if self.object:get_enemy() then
+		xr_logic.mob_release(self.object)
+		return
+	else
+		xr_combat_ignore.fighting_with_actor_npcs[id] = nil
+	end
+
+	if self.st.active_section ~= nil then
+		xr_logic.issue_event(self.object, self.st[self.st.active_scheme], "update", delta)
+	end
+	
+	if (squad and squad.current_action and squad.current_action == 0) then
+		local squad_target = squad.assigned_target_id and simulation_objects.get_server_entity(squad.assigned_target_id)
+		if not (squad_target) then
+			xr_logic.mob_release(self.object)
+			return
+		end
+		
+		if not (simulation_objects.is_on_the_same_level(squad_target, se_obj)) then 
+			TeleportSquad(squad,squad_target.position,squad_target.m_level_vertex_id,squad_target.m_game_vertex_id)
+			return 
+		end
+		
+		xr_logic.mob_capture(self.object, true)
+
+		local commander = db.storage[squad:commander_id()] and db.storage[squad:commander_id()].object
+		if (commander == nil or commander:id() == id) then
+			action(self.object, move(move.walk_with_leader, squad_target.position or self.object:position()),cond(cond.move_end))
+		else
+			local pos = commander:position()
+			if (pos:distance_to(self.object:position()) > 10) then
+				action(self.object, move(move.run_with_leader, pos),cond(cond.move_end))
+			else
+				action(self.object, move(move.walk_with_leader, pos),cond(cond.move_end))
+			end
+		end
+	end
+end
+
