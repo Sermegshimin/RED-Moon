@@ -1,0 +1,92 @@
+local blood_moon_zombies = {
+    "lady_weak", "lady_normal", "lady_strong", "skyrim_male", "skyrim_female"
+}
+
+local respawn_zombies = {
+    "hayzed_weak", "hayzed_normal", "hayzed_strong" 
+}
+
+local respawn_spiders = {
+    "vebber_strong", "vebber_normal","vebber_weak", "mizgir_strong", "mizgir_normal", "mizgir_weak"
+}
+
+local exploding_mutants = {}
+
+
+function explode_npc(npc)
+    if not npc then
+        return
+    end
+
+    local body_tear_effect
+    body_tear_effect = particles_object("anomaly2\\body_tear_0" .. math.random(1, 2))
+    
+    if body_tear_effect then
+            body_tear_effect:play_at_pos(npc:position())
+    end
+    local body_tear_sound = sound_object("anomaly\\anomaly_body_tear_1")
+    if body_tear_sound then
+        body_tear_sound:play_at_pos(npc, npc:position())
+        body_tear_sound.volume = 1
+    end
+
+    npc_id = npc:id()
+    se_npc = alife_object(npc_id)
+    if npc:alive() then
+        npc:kill(npc)
+    end
+    safe_release_manager.release(se_npc) 
+end
+
+
+function explode_on_death(npc, who)
+    if not IsMonster(npc) then return end
+    local bmm = (blood_moon_manager and blood_moon_manager.is_loaded())
+    local cmm  = (crawling_mist_manager and crawling_mist_manager.is_loaded())
+    
+    if bmm or cmm then
+        if bmm then 
+            for _, zombie_type in ipairs(blood_moon_zombies) do
+                table.insert(exploding_mutants, zombie_type)
+            end
+            if blood_moon_manager.is_started() then
+                for _, zombie_type in ipairs(respawn_zombies) do
+                    table.insert(exploding_mutants, zombie_type)
+                end
+            end
+        end
+        if cmm then 
+            if crawling_mist_manager.is_started() then
+                for _, spider_type in ipairs(respawn_spiders) do
+                    table.insert(exploding_mutants, spider_type)
+                end
+            end
+        end
+        
+        if blood_moon_manager.is_finished() and crawling_mist_manager.is_finished() then
+            exploding_mutants = {}
+        end
+    
+        local function matches_section(section)
+            for _, value in ipairs(exploding_mutants) do
+                if section == value then
+                    return true
+                end
+            end
+            return false
+        end
+        if matches_section(npc:section()) then
+            if bmm and blood_moon_manager.is_started() then
+                explode_npc(npc)
+            end
+            if cmm and crawling_mist_manager.is_started() then
+                explode_npc(npc)
+            end
+        end
+    end    
+end
+
+-- Initialize the script on game start
+function on_game_start()
+    RegisterScriptCallback("monster_on_death_callback", explode_on_death)
+end
