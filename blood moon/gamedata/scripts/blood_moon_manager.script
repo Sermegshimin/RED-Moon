@@ -106,7 +106,7 @@ function CBloodMoonManager:calculate_next_blood_moon()
 	
 	local freq = blood_moon_mcm.get_config("frequency")
 	local random_days = math.random(math.floor(freq / 2), freq) + math.random() -- Add a random fraction of a day
-	local next_event_time = random_days * 86400 + (24 - h) * 3600 - 2400  -- 86400 seconds in a day
+	local next_event_time = random_days * 86400 - 2700  -- 86400 seconds in a day
 
 	-- Calculate the hour of the next event
 	local event_hour = (h + math.floor(next_event_time / 3600)) % 24
@@ -552,7 +552,6 @@ function spawn_zombies_on_nearest_smarts()
 					if squad then
 						for member in squad:squad_members() do
 							table.insert(blood_moon_active_spawns, {
-							mutant_id = squad.id,
 							npc_id = member.id, 
 							})
 						end
