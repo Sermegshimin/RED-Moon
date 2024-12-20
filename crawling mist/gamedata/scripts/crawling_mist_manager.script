@@ -44,14 +44,7 @@ function CCMistManager:initialize() --Initializes some important variables
 	end 
 	
 	if not (self._delta) then 
-		local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
-		Y, M, D, h, m, s, ms = game.get_game_time():get(Y, M, D, h, m, s, ms)
-		local first_time_hours = 24 - h
-
-		local freq = crawling_mist_mcm.get_config("frequency")
-		local random_days = math.random(math.floor(freq/2), freq) + math.random() -- Add a random fraction of a day
-		self._delta = random_days * 86400 + first_time_hours * 3600 - 2400  -- 86400 seconds in a day
-
+		self:calculate_next_cmist()
 	end
 	
 	self.cmist_duration = 450 -- (duration: 45mins of game time (1 gaem min = 10 irl sec))
@@ -105,13 +98,33 @@ end
 
 function CCMistManager:new_cmist_time() --Defines when the next cmist is gonna happen
 	self.last_cmist_time 	= game.get_game_time()
+	self:calculate_next_cmist()
+
+end
+
+function CCMistManager:calculate_next_cmist()
 	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
 	Y, M, D, h, m, s, ms = self.last_cmist_time:get(Y, M, D, h, m, s, ms)
-	local first_time_hours = 24 - h
+	
 	local freq = crawling_mist_mcm.get_config("frequency")
-	local random_days = math.random(math.floor(freq/2), freq) + math.random() -- Add a random fraction of a day
-	self._delta = random_days * 86400 + first_time_hours * 3600 - 2400  -- 86400 seconds in a day
+	local random_days = math.random(math.floor(freq / 2), freq) + math.random() -- Add a random fraction of a day
+	local next_event_time = random_days * 86400 - 2700  -- 86400 seconds in a day
 
+	-- Calculate the hour of the next event
+	local event_hour = (h + math.floor(next_event_time / 3600)) % 24
+
+	-- Adjust to ensure the event is in the morning
+	if event_hour >= 10 and event_hour < 6 then
+		-- If the event falls between 10 AM and 6 AM, adjust to the next 6 AM
+		if event_hour < 6 then
+			local hours_to_next_morning = 6 - event_hour
+		else
+			local hours_to_next_morning = (24 - event_hour) + 6
+		end
+		next_event_time = next_event_time + (hours_to_next_morning * 3600)
+	end
+
+	self._delta = next_event_time
 end
 
 function CCMistManager:skip_cmist()
@@ -232,7 +245,7 @@ function CCMistManager:update() --this function is called a lot of times consecu
 			spawn_spiders_on_nearest_smarts() -- spawn spiders
 		end
 
-		if (diff_sec % 40 == 0) then
+		if (diff_sec % 80 == 0) then
 			release_distant_npcs(cmist_max_spawn_radius)
 			spawn_spiders_on_nearest_smarts() -- spawn spiders
 		end
@@ -545,7 +558,6 @@ function spawn_spiders_on_nearest_smarts()
 					if squad then
 						for member in squad:squad_members() do
 							table.insert(cmist_active_spawns, {
-							mutant_id = squad.id,
 							npc_id = member.id, 
 							})
 						end
