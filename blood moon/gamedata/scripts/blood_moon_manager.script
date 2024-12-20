@@ -34,28 +34,20 @@ class "CBloodMoonManager"
 function CBloodMoonManager:__init() --Is called upon the creation of the class instance (immediately)
 end
 
-function CBloodMoonManager:initialize() --Initializes some important variables
+function CBloodMoonManager:initialize()
 	if not (self._state_loaded) then 
-		self.game_time_factor=level.get_time_factor()
+		self.game_time_factor = level.get_time_factor()
 		self.last_blood_moon_time = game.get_game_time()
 		self.inited_time = game.get_game_time()
 		self.started = false
 		self.finished = true
 	end 
-	
+
 	if not (self._delta) then 
-		local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
-		Y, M, D, h, m, s, ms = game.get_game_time():get(Y, M, D, h, m, s, ms)
-		local first_time_hours = 24 - h
-
-		local freq = blood_moon_mcm.get_config("frequency")
-		local random_days = math.random(math.floor(freq/2), freq) + math.random() -- Add a random fraction of a day
-		self._delta = random_days * 86400 + first_time_hours * 3600 - 2400  -- 86400 seconds in a day
-
+		self:calculate_next_blood_moon()
 	end
 	
-	self.blood_moon_duration = 450 -- (duration: 45mins of game time (1 gaem min = 10 irl sec))
-	
+	self.blood_moon_duration = 450 -- (duration: 45mins of game time (1 game min = 10 irl sec))
 	self.time_forwarded = false
 end
 
@@ -103,15 +95,30 @@ function CBloodMoonManager:start(manual) --Starts the event (this function is ca
 	end
 end
 
-function CBloodMoonManager:new_blood_moon_time() --Defines when the next blood moon is gonna happen
-	self.last_blood_moon_time 	= game.get_game_time()
+function CBloodMoonManager:new_blood_moon_time()
+	self.last_blood_moon_time = game.get_game_time()
+	self:calculate_next_blood_moon()
+end
+
+function CBloodMoonManager:calculate_next_blood_moon()
 	local Y, M, D, h, m, s, ms = 0, 0, 0, 0, 0, 0, 0
 	Y, M, D, h, m, s, ms = self.last_blood_moon_time:get(Y, M, D, h, m, s, ms)
-	local first_time_hours = 24 - h
+	
 	local freq = blood_moon_mcm.get_config("frequency")
-	local random_days = math.random(math.floor(freq/2), freq) + math.random() -- Add a random fraction of a day
-	self._delta = random_days * 86400 + first_time_hours * 3600 - 2400  -- 86400 seconds in a day
+	local random_days = math.random(math.floor(freq / 2), freq) + math.random() -- Add a random fraction of a day
+	local next_event_time = random_days * 86400 + (24 - h) * 3600 - 2400  -- 86400 seconds in a day
 
+	-- Calculate the hour of the next event
+	local event_hour = (h + math.floor(next_event_time / 3600)) % 24
+
+	-- Adjust to ensure the event is at night
+	if event_hour >= 5 and event_hour < 18 then
+		-- If the event falls between 5 AM and 6 PM, adjust to the next 6 PM
+		local hours_to_next_night = 18 - event_hour
+		next_event_time = next_event_time + (hours_to_next_night * 3600)
+	end
+
+	self._delta = next_event_time
 end
 
 function CBloodMoonManager:skip_blood_moon()
@@ -635,33 +642,27 @@ function delete_zombies()
 end
 
 function on_key_press(key)
-    if (key == DIK_keys.DIK_M) and (blood_moon_mcm.get_config("enable_debug")) then
-        local g_time = game.get_game_time()
-        local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or g_time
-        local time_since_last = g_time:diffSec(last_blood_moon_time)
-        local time_until_next = math.max(0, BloodMoonManager._delta - time_since_last)
+	if blood_moon_mcm.get_config("enable_debug") then
+		if key == DIK_keys.DIK_M then
+			local g_time = game.get_game_time()
+			local last_blood_moon_time = BloodMoonManager and BloodMoonManager.last_blood_moon_time or g_time
+			local time_until_next = math.max(0, (BloodMoonManager._delta or 0) - g_time:diffSec(last_blood_moon_time))
 
-        local days = math.floor(time_until_next / 86400)
-        local remaining_seconds = time_until_next % 86400
-        local hours = math.floor(remaining_seconds / 3600)
-        remaining_seconds = remaining_seconds % 3600
-        local minutes = math.floor(remaining_seconds / 60)
+			local days, remaining_seconds = math.floor(time_until_next / 86400), time_until_next % 86400
+			local hours, minutes = math.floor(remaining_seconds / 3600), math.floor((remaining_seconds % 3600) / 60)
 
-        local display_string = ""
-        if days > 0 then
-            display_string = display_string .. days .. " day" .. (days > 1 and "s " or " ")
-        end
-        if hours > 0 then
-            display_string = display_string .. hours .. " hour" .. (hours > 1 and "s " or " ")
-        end
-        display_string = display_string .. minutes .. " minute" .. (minutes > 1 and "s" or "")
+			local display_string = ""
+			if days > 0 then display_string = display_string .. days .. " day" .. (days > 1 and "s " or " ") end
+			if hours > 0 then display_string = display_string .. hours .. " hour" .. (hours > 1 and "s " or " ") end
+			display_string = display_string .. minutes .. " minute" .. (minutes > 1 and "s" or "")
 
-        news_manager.send_tip(db.actor, "Before blood moon - " .. display_string, nil, "recent_surge", nil, nil)
-    end
-	if (key == DIK_keys.DIK_K) and (blood_moon_mcm.get_config("enable_debug")) then
-		news_manager.send_tip(db.actor, "Zombies alive - " .. tostring(#blood_moon_active_spawns), nil, "recent_surge", nil, nil)
+			news_manager.send_tip(db.actor, "Before blood moon - " .. display_string, nil, "recent_surge", nil, nil)
+		elseif key == DIK_keys.DIK_K then
+			news_manager.send_tip(db.actor, "Zombies alive - " .. tostring(#blood_moon_active_spawns), nil, "recent_surge", nil, nil)
+		end
 	end
 end
+
 
 function actor_on_first_update()
 	determine_available_smarts()
