@@ -10,7 +10,6 @@ local defaults = {
 	["news_during_event"] = 1,
 	["news_after_event"] = 1,
 	["news_before_event"] = 1,
-	["sleepless_crawling_mist"] = 1,
 
 }
 
@@ -35,7 +34,6 @@ op = { id= "crawling_mist",sh=true ,gr={
 		{ id= "news_before_event"    	 	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "news_during_event"    	 	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "news_after_event"    	 	,type= "check"    ,val= 1	,def= true	   },
-		{ id= "sleepless_crawling_mist"    	,type= "check"    ,val= 1	,def= true	   },
 		{ id= "enable_debug"    	 	,type= "check"    ,val= 1	,def= false	   },
       }
     }
