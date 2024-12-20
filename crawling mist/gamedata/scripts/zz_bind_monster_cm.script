@@ -47,7 +47,7 @@ GOB = bind_monster.generic_object_binder
 	
 	local cls = self.object:clsid()
 	local sec = self.object:section()
-	if (cls == clsid.tushkano_s or cls == clsid.rat_s or sec == "vebber_weak" or sec == "vebber_strong" or sec == "vebber_normal") then
+	if (cls == clsid.tushkano_s or cls == clsid.rat_s or sec == "vebber_weak" or sec == "vebber_strong" or sec == "vebber_normal" or sec == "mizgir_weak" or sec == "mizgir_strong" or sec == "mizgir_normal") then
 		self.object:set_callback(callback.use_object, self.use_kick, self)
 		self.object:set_tip_text(self.object:set_tip_text(game.translate_string("st_body_kick")))
 	end
