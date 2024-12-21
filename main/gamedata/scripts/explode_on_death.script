@@ -12,6 +12,15 @@ local respawn_spiders = {
 
 local exploding_mutants = {}
 
+local function matches_section(section, table)
+        for _, value in ipairs(table) do
+            if section == value then
+                 return true
+             end
+        end
+    return false
+end
+
 
 function explode_npc(npc)
     if not npc then
@@ -19,8 +28,13 @@ function explode_npc(npc)
     end
 
     local body_tear_effect
-    body_tear_effect = particles_object("anomaly2\\body_tear_0" .. math.random(1, 2))
-    
+    local npc_sec = npc:section()
+    if matches_section(npc_sec, respawn_zombies) then
+        body_tear_effect = particles_object("anomaly2\\body_tear_01")
+    elseif matches_section(npc:section(), respawn_spiders) then
+        body_tear_effect = particles_object("anomaly2\\heat_03_green")
+    end
+
     if body_tear_effect then
             body_tear_effect:play_at_pos(npc:position())
     end
@@ -67,21 +81,8 @@ function explode_on_death(npc, who)
             exploding_mutants = {}
         end
     
-        local function matches_section(section)
-            for _, value in ipairs(exploding_mutants) do
-                if section == value then
-                    return true
-                end
-            end
-            return false
-        end
-        if matches_section(npc:section()) then
-            if bmm and blood_moon_manager.is_started() then
-                explode_npc(npc)
-            end
-            if cmm and crawling_mist_manager.is_started() then
-                explode_npc(npc)
-            end
+        if matches_section(npc:section(), exploding_mutants) then
+            explode_npc(npc)
         end
     end    
 end
