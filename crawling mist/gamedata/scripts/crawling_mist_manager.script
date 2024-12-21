@@ -29,6 +29,7 @@ local smart_terrain_exemptions = {}
 local max_spider_spawn_count =  crawling_mist_mcm.get_config("max_spider_spawn_count") -- add to MCM (done!)- used to adjust max active spider spawns. When a squad is eliminated, script spawns another squad.
 local max_spider_squad_size = crawling_mist_mcm.get_config("max_spider_squad_size") -- add to MCM (done!)- I've set ltx squad size to 3 so this will increase squad sizes randomly to this number. Gives squads some variety in squad number
 local number_of_spawning_smarts = crawling_mist_mcm.get_config("number_of_spawning_smarts")  -- add to MCM (done!)- used to adjust number of nearest smarts that will spawn mutants.
+local squad_count = 0
 
 class "CCMistManager"
 function CCMistManager:__init() --Is called upon the creation of the class instance (immediately)
@@ -532,43 +533,33 @@ function read_ltx_section(filename,section,field)
 end
 
 function spawn_spiders_on_nearest_smarts()
-	local nearest_smarts = get_sorted_smart_ids()
-  
-	local smarts_to_use = {}
-	for i = 1, math.min(number_of_spawning_smarts, #nearest_smarts) do
-	  table.insert(smarts_to_use, nearest_smarts[i])
-	end
-	local counter_spider_squads = 0
-	for _, smart_id in ipairs(smarts_to_use) do
-		if counter_spider_squads < max_spider_spawn_count and #cmist_active_spawns < (max_spider_spawn_count*(max_spider_squad_size/3*2)) then
-			local smart = alife_object(smart_id)
-			if smart then
-				local squad = SIMBOARD:create_squad(smart, "crawling_mist_spiders")
-			
-				if squad then
-					local squad_size_by_level = tonumber(read_ltx_section("plugins\\crawling_mist_configs.ltx", "squad_size_by_level", level.name()))
-					local new_squad_size = nil
-					if max_spider_squad_size > squad_size_by_level then
-						new_squad_size = squad_size_by_level
-					else
-						new_squad_size = max_spider_squad_size
-					end
-					add_squad_members(squad, new_squad_size)
-					counter_spider_squads = counter_spider_squads + 1
-					if squad then
-						for member in squad:squad_members() do
-							table.insert(cmist_active_spawns, {
-							npc_id = member.id, 
-							})
-						end
-						squad.scripted_target = "actor"
-						squad.rush_to_target = true
-						pr("Spiders squad spawned on smart [%s], targeting actor.", smart_id)  
-					end
+    local nearest_smarts = get_sorted_smart_ids()
+    local smarts_to_use = {}
+	local squad_size_by_level = tonumber(read_ltx_section("plugins\\crawling_mist_configs.ltx", "squad_size_by_level", level.name())) or 3
+	local new_squad_size = math.min(max_spider_squad_size, squad_size_by_level)
+
+    for i = 1, math.min(number_of_spawning_smarts, #nearest_smarts) do
+        table.insert(smarts_to_use, nearest_smarts[i])
+    end
+
+    for _, smart_id in ipairs(smarts_to_use) do
+        if squad_count <= max_spider_spawn_count then
+            local smart = alife_object(smart_id)
+            if smart then
+                local squad = SIMBOARD:create_squad(smart, "crawling_mist_spiders")
+				squad_count = squad_count + 1
+				if squad and squad.commander_id then
+					add_squad_members(squad, new_squad_size, smart_id)
 				end
-			end
-		end
-	end
+				for member in squad:squad_members() do
+					table.insert(cmist_active_spawns, {npc_id = member.id})
+				end
+				squad.scripted_target = "actor"
+				squad.rush_to_target = true
+				pr("Spiders squad spawned on smart [%s], targeting actor. Squad size: %s", smart_id, squad:npc_count())
+            end
+        end
+    end
 end
 
 function server_entity_on_unregister(obj)
@@ -582,8 +573,7 @@ function server_entity_on_unregister(obj)
 	end
 end
 
-function add_squad_members(squad, max_squad_count)
-    local max_squad_count = math.random(1, max_squad_count)
+function add_squad_members(squad, max_squad_count, smart_id)
 	local commander = alife_object(squad:commander_id())
 	if commander then
 		while squad:npc_count() < max_squad_count do
@@ -591,11 +581,9 @@ function add_squad_members(squad, max_squad_count)
 			local lvid = commander.m_level_vertex_id
 			local gvid = commander.m_game_vertex_id
 
-			local squad_smart = squad.smart_id and SIMBOARD.smarts[squad.smart_id].smrt
-			if not squad_smart then return end
+			local squad_smart = smart_id and SIMBOARD.smarts[smart_id].smrt
 
 			local random_spawn = ini_sys:r_string_ex(squad:section_name(), "npc_random")
-			if not random_spawn then return end
 
 			random_spawn = parse_names(random_spawn)
 			local random_sec = random_spawn[math.random(1, #random_spawn)]
@@ -623,6 +611,7 @@ function release_all_cmist_spiders()
 		pr("spider goes boom!")
 		explode_on_death.explode_npc(npc)
 	end
+	squad_count = 0
 	cmist_active_spawns = {}
 end
 
