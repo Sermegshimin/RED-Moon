@@ -29,7 +29,7 @@ function explode_npc(npc)
 
     local body_tear_effect
     local npc_sec = npc:section()
-    if matches_section(npc_sec, respawn_zombies) then
+    if matches_section(npc_sec, respawn_zombies) or matches_section(npc_sec, blood_moon_zombies) then
         body_tear_effect = particles_object("anomaly2\\body_tear_01")
     elseif matches_section(npc:section(), respawn_spiders) then
         body_tear_effect = particles_object("anomaly2\\heat_03_green")
