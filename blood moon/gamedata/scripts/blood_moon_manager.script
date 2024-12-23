@@ -233,13 +233,6 @@ function CBloodMoonManager:update() --this function is called a lot of times con
 			level.set_weather_fx("fx_blood_night")
             self.stages['beginning'] = true
         end
-		if (diff_sec >= 10) and (self.stages['first_wave'] == nil) then
-			self.stages['first_wave'] = true
-
-			blood_moon_active_spawns = {} -- initialize active spawns table
-			--spawn_zombies_on_nearest_smarts() -- spawn zombies
-		end
-
 		if (diff_sec % 10 == 0) then
 			release_distant_npcs(blood_moon_max_spawn_radius)
 			spawn_zombies_on_nearest_smarts() -- spawn zombies

@@ -239,14 +239,7 @@ function CCMistManager:update() --this function is called a lot of times consecu
 			level.set_weather_fx("fx_crawling_mist_day")
             self.stages['beginning'] = true
         end
-		if (diff_sec >= 10) and (self.stages['first_wave'] == nil) then
-			self.stages['first_wave'] = true
-
-			cmist_active_spawns = {} -- initialize active spawns table
-			spawn_spiders_on_nearest_smarts() -- spawn spiders
-		end
-
-		if (diff_sec % 80 == 0) then
+		if (diff_sec % 50 == 0) then
 			release_distant_npcs(cmist_max_spawn_radius)
 			spawn_spiders_on_nearest_smarts() -- spawn spiders
 		end
