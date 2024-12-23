@@ -64,7 +64,7 @@ Pre-crawling mist
 		<text>Guys, I had a nightmare today about spiders. Do you think it's a sign?</text>
 	</string>
 	<string id="st_dyn_news_cmist_start_5">
-		<text>This fog send chills down my spine</text>
+		<text>This fog sends chills down my spine</text>
 	</string>
 	<string id="st_dyn_news_cmist_start_6">
 		<text>I feel like I will need my gun very soon...</text>
@@ -87,7 +87,7 @@ During crawling mist
 		<text>Keep distance! Don't let the spiders come closer!</text>
 	</string>
 	<string id="st_dyn_news_cmist_during_4">
-		<text>Punch thema nd kick them! They are weak for physical attacks</text>
+		<text>Punch them and kick them! They are weak to physical attacks</text>
 	</string>
 	<string id="st_dyn_news_cmist_during_5">
 		<text>Aaaaaaarh! It bit me! I don't feel well...</text>
@@ -96,7 +96,7 @@ During crawling mist
 		<text>Come here, bastards! I will make some cheese out of you!</text>
 	</string>
 	<string id="st_dyn_news_cmist_during_7">
-		<text>These big spiders are so sturdy!</text>
+		<text>These small spiders are so annoying!</text>
 	</string>
 	<string id="st_dyn_news_cmist_during_8">
 		<text>We don't have time to relax! Even more spiders are coming this way!</text>
