@@ -1,8 +1,23 @@
-local shw_blood_moon = blood_moon_mcm.get_config("news_before_event")
-local shw_reaction = blood_moon_mcm.get_config("news_after_event")
-local shw_during_bm = blood_moon_mcm.get_config("news_during_event")
+if blood_moon_manager then
+	shw_blood_moon = blood_moon_mcm.get_config("news_before_event")
+	shw_reaction = blood_moon_mcm.get_config("news_after_event")
+	shw_during_bm = blood_moon_mcm.get_config("news_during_event")
+	blood_moon_shift = not blood_moon_manager.blood_moon_started()
+	counter_bm_during = 0
+	bm = blood_moon_manager
+end
+
+if crawling_mist_manager then
+	first_time = true
+	shw_reaction_cm = crawling_mist_mcm.get_config("news_after_event")
+	shw_during_cm = crawling_mist_mcm.get_config("news_during_event")
+	cmist_shift = not crawling_mist_manager.cmist_started()
+	counter_cm_during = 0
+	cm = crawling_mist_manager
+end
+
 local msg_duration = ui_options.get("alife/dynamic_news/message_duration")
-local bm = blood_moon_manager
+
 local possible_factions = {
 	"army",
 	"bandit",
@@ -31,9 +46,6 @@ function dynamic_news_manager.DynamicNewsManager:TickRandom()
 	return false
  end
 
-local blood_moon_shift = not bm.blood_moon_started()
-local counter_bm_during = 0
-
 OriginalToggle = dynamic_news_manager.DynamicNewsManager.NewsToggle
 function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 	local flag = OriginalToggle(self)
@@ -48,21 +60,34 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 			end
 		end
 		self.surge_type = "blood moon"
-		for ch,messages in pairs(self.queue) do
-			local c = #messages
-			while c > 0 do
-				local message = messages[c]
-				if (message) then
-					messages[c] = nil
-				end
-				c = c - 1
-			end
-		end
 	end
 	if (blood_moon_shift and bm.blood_moon_started()) then
 		blood_moon_shift = false
 	elseif ((not blood_moon_shift) and bm.blood_moon_complete()) then 
 		self:GossipBloodMoonEnd(self.surge_type)
+	end
+
+	if cm and cm.cmist_started() then
+		flag = true
+		if first_time then
+			self:GossipCmistDuring(true)
+			first_time = false
+		end
+		if (shw_during_cm) and (xr_conditions.surge_complete()) then
+			if	(counter_cm_during > 5) then
+				self:GossipCmistDuring(false)
+				counter_cm_during = 0
+			else
+				counter_cm_during = counter_cm_during + 1
+			end
+		end
+		self.surge_type = "crawling  mist"
+	end
+	if (cmist_shift and cm.cmist_started()) then
+		cmist_shift = false
+	elseif ((not cmist_shift) and cm.cmist_complete()) then 
+		self:GossipCmistEnd(self.surge_type)
+		first_time = true
 	end
 	return flag
 end
@@ -174,6 +199,58 @@ function dynamic_news_manager.DynamicNewsManager:GossipBloodMoonDuring()
 	
 	local Se = strformat("%s, %s",sender:character_name(),dynamic_news_helper.GetCommunityDescription(sender,6))
 	local msg = utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["what"]="blood moon" } )
+	
+	dynamic_news_helper.send_tip(msg,Se,math.random(10,15),msg_duration,sender:character_icon(),"beep_1","npc")
+
+	return true
+end
+
+function dynamic_news_manager.DynamicNewsManager:GossipCmistEnd(what) -- stalkers reacting about the cmist
+	if (not shw_reaction) then
+		return false
+	end
+	
+	if (what ~= "crawling mist") then
+		return false
+	end
+	
+	local sender = self:FindSpeakerRandom()
+	if self:IsSpecialNPC(sender) or self:IsMonoCommunity(sender) then
+		return false
+	end
+		
+	local tbl = utils_data.collect_translations("st_dyn_news_cmist_after_",true)
+	if (not tbl) then
+		return false
+	end
+	
+	local Se = strformat("%s, %s",sender:character_name(),dynamic_news_helper.GetCommunityDescription(sender,6))
+	local msg = utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["what"]=what } )
+	
+	dynamic_news_helper.send_tip(msg,Se,math.random(10,15),msg_duration,sender:character_icon(),"beep_1","npc")
+
+	self.surge_type = "" --reset
+	return true
+end
+
+function dynamic_news_manager.DynamicNewsManager:GossipCmistDuring(start)
+	local sender = self:FindSpeakerRandom()
+	if self:IsSpecialNPC(sender) or self:IsMonoCommunity(sender) then
+		return false
+	end
+		
+	local tbl
+	if start then
+		tbl = utils_data.collect_translations("st_dyn_news_cmist_start_",true)
+	else
+		tbl = utils_data.collect_translations("st_dyn_news_cmist_during_",true)
+	end
+	if (not tbl) then
+		return false
+	end
+	
+	local Se = strformat("%s, %s",sender:character_name(),dynamic_news_helper.GetCommunityDescription(sender,6))
+	local msg = utils_data.parse_string_keys( tbl[math.random(#tbl)] , { ["what"]="crawling mist" } )
 	
 	dynamic_news_helper.send_tip(msg,Se,math.random(10,15),msg_duration,sender:character_icon(),"beep_1","npc")
 
