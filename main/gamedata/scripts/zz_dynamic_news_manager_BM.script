@@ -63,7 +63,7 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 	end
 	if (blood_moon_shift and bm.blood_moon_started()) then
 		blood_moon_shift = false
-	elseif ((not blood_moon_shift) and bm.blood_moon_complete()) then 
+	elseif ((not blood_moon_shift) and bm and bm.blood_moon_complete()) then 
 		self:GossipBloodMoonEnd(self.surge_type)
 	end
 
@@ -85,7 +85,7 @@ function dynamic_news_manager.DynamicNewsManager:NewsToggle()
 	end
 	if (cmist_shift and cm.cmist_started()) then
 		cmist_shift = false
-	elseif ((not cmist_shift) and cm.cmist_complete()) then 
+	elseif ((not cmist_shift) and cm and cm.cmist_complete()) then 
 		self:GossipCmistEnd(self.surge_type)
 		first_time = true
 	end
