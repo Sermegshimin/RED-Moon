@@ -77,7 +77,7 @@ function explode_on_death(npc, who)
             end
         end
         
-        if blood_moon_manager.is_finished() and crawling_mist_manager.is_finished() then
+        if blood_moon_manager and blood_moon_manager.is_finished() and crawling_mist_manager and crawling_mist_manager.is_finished() then
             exploding_mutants = {}
         end
     
